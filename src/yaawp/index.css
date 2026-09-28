@@ -1,0 +1,629 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* ========================================================================= */
+/* COMPREHENSIVE SYSTEM THEMES (5 Bright + 6 Dark Distinct Presets)          */
+/* Every theme has its own distinctive canvas, cards, sidebars, borders & glow */
+/* ========================================================================= */
+
+/* 1. MIDNIGHT NAVY (Dark) */
+html[data-theme="midnight"].dark,
+html[data-theme="midnight"].dark body,
+html[data-theme="midnight"].dark .bg-slate-50,
+html[data-theme="midnight"].dark .dark\:bg-slate-950,
+html[data-theme="midnight"].dark .dark\:bg-zinc-950 {
+  background-color: #030712 !important;
+  color: #f0f9ff !important;
+}
+html[data-theme="midnight"].dark .bg-white,
+html[data-theme="midnight"].dark .dark\:bg-slate-900,
+html[data-theme="midnight"].dark .dark\:bg-zinc-900,
+html[data-theme="midnight"].dark aside,
+html[data-theme="midnight"].dark #desktop-sidebar,
+html[data-theme="midnight"].dark #mobile-top-header,
+html[data-theme="midnight"].dark #mobile-bottom-nav {
+  background-color: #0b1528 !important;
+}
+html[data-theme="midnight"].dark .dark\:bg-slate-800,
+html[data-theme="midnight"].dark .dark\:bg-zinc-800,
+html[data-theme="midnight"].dark .bg-slate-100 {
+  background-color: #112240 !important;
+}
+html[data-theme="midnight"].dark .border-slate-200,
+html[data-theme="midnight"].dark .dark\:border-slate-800,
+html[data-theme="midnight"].dark .dark\:border-zinc-800,
+html[data-theme="midnight"].dark .dark\:border-slate-700 {
+  border-color: #1e3a68 !important;
+}
+html[data-theme="midnight"].dark .text-lime-500,
+html[data-theme="midnight"].dark .text-lime-400 {
+  color: #38bdf8 !important;
+}
+html[data-theme="midnight"].dark .bg-lime-400,
+html[data-theme="midnight"].dark .bg-lime-500 {
+  background-color: #38bdf8 !important;
+  color: #030712 !important;
+}
+
+/* 2. CYBER VIOLET (Dark) */
+html[data-theme="cyber"].dark,
+html[data-theme="cyber"].dark body,
+html[data-theme="cyber"].dark .bg-slate-50,
+html[data-theme="cyber"].dark .dark\:bg-slate-950,
+html[data-theme="cyber"].dark .dark\:bg-zinc-950 {
+  background-color: #060515 !important;
+  color: #faf5ff !important;
+}
+html[data-theme="cyber"].dark .bg-white,
+html[data-theme="cyber"].dark .dark\:bg-slate-900,
+html[data-theme="cyber"].dark .dark\:bg-zinc-900,
+html[data-theme="cyber"].dark aside,
+html[data-theme="cyber"].dark #desktop-sidebar,
+html[data-theme="cyber"].dark #mobile-top-header,
+html[data-theme="cyber"].dark #mobile-bottom-nav {
+  background-color: #100e2e !important;
+}
+html[data-theme="cyber"].dark .dark\:bg-slate-800,
+html[data-theme="cyber"].dark .dark\:bg-zinc-800,
+html[data-theme="cyber"].dark .bg-slate-100 {
+  background-color: #1c184d !important;
+}
+html[data-theme="cyber"].dark .border-slate-200,
+html[data-theme="cyber"].dark .dark\:border-slate-800,
+html[data-theme="cyber"].dark .dark\:border-zinc-800,
+html[data-theme="cyber"].dark .dark\:border-slate-700 {
+  border-color: #37317e !important;
+}
+html[data-theme="cyber"].dark .text-lime-500,
+html[data-theme="cyber"].dark .text-lime-400 {
+  color: #c084fc !important;
+}
+html[data-theme="cyber"].dark .bg-lime-400,
+html[data-theme="cyber"].dark .bg-lime-500 {
+  background-color: #a855f7 !important;
+  color: #ffffff !important;
+}
+
+/* 3. SUNSET EMBER (Dark) */
+html[data-theme="sunset"].dark,
+html[data-theme="sunset"].dark body,
+html[data-theme="sunset"].dark .bg-slate-50,
+html[data-theme="sunset"].dark .dark\:bg-slate-950,
+html[data-theme="sunset"].dark .dark\:bg-zinc-950 {
+  background-color: #120704 !important;
+  color: #fff7ed !important;
+}
+html[data-theme="sunset"].dark .bg-white,
+html[data-theme="sunset"].dark .dark\:bg-slate-900,
+html[data-theme="sunset"].dark .dark\:bg-zinc-900,
+html[data-theme="sunset"].dark aside,
+html[data-theme="sunset"].dark #desktop-sidebar,
+html[data-theme="sunset"].dark #mobile-top-header,
+html[data-theme="sunset"].dark #mobile-bottom-nav {
+  background-color: #210f08 !important;
+}
+html[data-theme="sunset"].dark .dark\:bg-slate-800,
+html[data-theme="sunset"].dark .dark\:bg-zinc-800,
+html[data-theme="sunset"].dark .bg-slate-100 {
+  background-color: #35180c !important;
+}
+html[data-theme="sunset"].dark .border-slate-200,
+html[data-theme="sunset"].dark .dark\:border-slate-800,
+html[data-theme="sunset"].dark .dark\:border-zinc-800,
+html[data-theme="sunset"].dark .dark\:border-slate-700 {
+  border-color: #5f2c17 !important;
+}
+html[data-theme="sunset"].dark .text-lime-500,
+html[data-theme="sunset"].dark .text-lime-400 {
+  color: #fb923c !important;
+}
+html[data-theme="sunset"].dark .bg-lime-400,
+html[data-theme="sunset"].dark .bg-lime-500 {
+  background-color: #f97316 !important;
+  color: #ffffff !important;
+}
+
+/* 4. EMERALD FOREST (Dark) */
+html[data-theme="emerald"].dark,
+html[data-theme="emerald"].dark body,
+html[data-theme="emerald"].dark .bg-slate-50,
+html[data-theme="emerald"].dark .dark\:bg-slate-950,
+html[data-theme="emerald"].dark .dark\:bg-zinc-950 {
+  background-color: #02120b !important;
+  color: #ecfdf5 !important;
+}
+html[data-theme="emerald"].dark .bg-white,
+html[data-theme="emerald"].dark .dark\:bg-slate-900,
+html[data-theme="emerald"].dark .dark\:bg-zinc-900,
+html[data-theme="emerald"].dark aside,
+html[data-theme="emerald"].dark #desktop-sidebar,
+html[data-theme="emerald"].dark #mobile-top-header,
+html[data-theme="emerald"].dark #mobile-bottom-nav {
+  background-color: #072417 !important;
+}
+html[data-theme="emerald"].dark .dark\:bg-slate-800,
+html[data-theme="emerald"].dark .dark\:bg-zinc-800,
+html[data-theme="emerald"].dark .bg-slate-100 {
+  background-color: #0e3826 !important;
+}
+html[data-theme="emerald"].dark .border-slate-200,
+html[data-theme="emerald"].dark .dark\:border-slate-800,
+html[data-theme="emerald"].dark .dark\:border-zinc-800,
+html[data-theme="emerald"].dark .dark\:border-slate-700 {
+  border-color: #1b5d40 !important;
+}
+html[data-theme="emerald"].dark .text-lime-500,
+html[data-theme="emerald"].dark .text-lime-400 {
+  color: #34d399 !important;
+}
+html[data-theme="emerald"].dark .bg-lime-400,
+html[data-theme="emerald"].dark .bg-lime-500 {
+  background-color: #10b981 !important;
+  color: #02120b !important;
+}
+
+/* 5. OBSIDIAN OLED (Dark) */
+html[data-theme="obsidian"].dark,
+html[data-theme="obsidian"].dark body,
+html[data-theme="obsidian"].dark .bg-slate-50,
+html[data-theme="obsidian"].dark .dark\:bg-slate-950,
+html[data-theme="obsidian"].dark .dark\:bg-zinc-950 {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+html[data-theme="obsidian"].dark .bg-white,
+html[data-theme="obsidian"].dark .dark\:bg-slate-900,
+html[data-theme="obsidian"].dark .dark\:bg-zinc-900,
+html[data-theme="obsidian"].dark aside,
+html[data-theme="obsidian"].dark #desktop-sidebar,
+html[data-theme="obsidian"].dark #mobile-top-header,
+html[data-theme="obsidian"].dark #mobile-bottom-nav {
+  background-color: #09090b !important;
+}
+html[data-theme="obsidian"].dark .dark\:bg-slate-800,
+html[data-theme="obsidian"].dark .dark\:bg-zinc-800,
+html[data-theme="obsidian"].dark .bg-slate-100 {
+  background-color: #141417 !important;
+}
+html[data-theme="obsidian"].dark .border-slate-200,
+html[data-theme="obsidian"].dark .dark\:border-slate-800,
+html[data-theme="obsidian"].dark .dark\:border-zinc-800,
+html[data-theme="obsidian"].dark .dark\:border-slate-700 {
+  border-color: #27272a !important;
+}
+html[data-theme="obsidian"].dark .text-lime-500,
+html[data-theme="obsidian"].dark .text-lime-400 {
+  color: #ffffff !important;
+}
+html[data-theme="obsidian"].dark .bg-lime-400,
+html[data-theme="obsidian"].dark .bg-lime-500 {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* 6. CYBER LIME (Dark default) */
+html[data-theme="dark"].dark,
+html[data-theme="dark"].dark body,
+html[data-theme="dark"].dark .bg-slate-50,
+html[data-theme="dark"].dark .dark\:bg-slate-950,
+html[data-theme="dark"].dark .dark\:bg-zinc-950 {
+  background-color: #09090b !important;
+  color: #f4f4f5 !important;
+}
+
+/* ========================================================================= */
+/* BRIGHT THEMES OVERRIDES                                                   */
+/* ========================================================================= */
+
+/* 7. NORDIC FJORD (Bright) */
+html[data-theme="nordic"]:not(.dark),
+html[data-theme="nordic"]:not(.dark) body,
+html[data-theme="nordic"]:not(.dark) .bg-slate-50 {
+  background-color: #ebf2f7 !important;
+  color: #0f172a !important;
+}
+html[data-theme="nordic"]:not(.dark) .bg-white,
+html[data-theme="nordic"]:not(.dark) aside,
+html[data-theme="nordic"]:not(.dark) #desktop-sidebar,
+html[data-theme="nordic"]:not(.dark) #mobile-top-header,
+html[data-theme="nordic"]:not(.dark) #mobile-bottom-nav {
+  background-color: #f7faff !important;
+}
+html[data-theme="nordic"]:not(.dark) .bg-slate-100 {
+  background-color: #dbe7f2 !important;
+}
+html[data-theme="nordic"]:not(.dark) .border-slate-200,
+html[data-theme="nordic"]:not(.dark) .border-slate-100 {
+  border-color: #b9d2e7 !important;
+}
+html[data-theme="nordic"]:not(.dark) .text-lime-500,
+html[data-theme="nordic"]:not(.dark) .text-lime-600 {
+  color: #2563eb !important;
+}
+html[data-theme="nordic"]:not(.dark) .bg-lime-400,
+html[data-theme="nordic"]:not(.dark) .bg-lime-500 {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+/* 8. PORCELAIN PURE (Bright) */
+html[data-theme="porcelain"]:not(.dark),
+html[data-theme="porcelain"]:not(.dark) body,
+html[data-theme="porcelain"]:not(.dark) .bg-slate-50 {
+  background-color: #f6f0e4 !important;
+  color: #292524 !important;
+}
+html[data-theme="porcelain"]:not(.dark) .bg-white,
+html[data-theme="porcelain"]:not(.dark) aside,
+html[data-theme="porcelain"]:not(.dark) #desktop-sidebar,
+html[data-theme="porcelain"]:not(.dark) #mobile-top-header,
+html[data-theme="porcelain"]:not(.dark) #mobile-bottom-nav {
+  background-color: #fffdfa !important;
+}
+html[data-theme="porcelain"]:not(.dark) .bg-slate-100 {
+  background-color: #ede4d1 !important;
+}
+html[data-theme="porcelain"]:not(.dark) .border-slate-200,
+html[data-theme="porcelain"]:not(.dark) .border-slate-100 {
+  border-color: #d6c5a2 !important;
+}
+html[data-theme="porcelain"]:not(.dark) .text-lime-500,
+html[data-theme="porcelain"]:not(.dark) .text-lime-600 {
+  color: #b45309 !important;
+}
+html[data-theme="porcelain"]:not(.dark) .bg-lime-400,
+html[data-theme="porcelain"]:not(.dark) .bg-lime-500 {
+  background-color: #b45309 !important;
+  color: #ffffff !important;
+}
+
+/* 9. MINT CRISP (Bright) */
+html[data-theme="mint_light"]:not(.dark),
+html[data-theme="mint_light"]:not(.dark) body,
+html[data-theme="mint_light"]:not(.dark) .bg-slate-50 {
+  background-color: #e6f7ee !important;
+  color: #064e3b !important;
+}
+html[data-theme="mint_light"]:not(.dark) .bg-white,
+html[data-theme="mint_light"]:not(.dark) aside,
+html[data-theme="mint_light"]:not(.dark) #desktop-sidebar,
+html[data-theme="mint_light"]:not(.dark) #mobile-top-header,
+html[data-theme="mint_light"]:not(.dark) #mobile-bottom-nav {
+  background-color: #f6fef9 !important;
+}
+html[data-theme="mint_light"]:not(.dark) .bg-slate-100 {
+  background-color: #d0f0de !important;
+}
+html[data-theme="mint_light"]:not(.dark) .border-slate-200,
+html[data-theme="mint_light"]:not(.dark) .border-slate-100 {
+  border-color: #9de0b8 !important;
+}
+html[data-theme="mint_light"]:not(.dark) .text-lime-500,
+html[data-theme="mint_light"]:not(.dark) .text-lime-600 {
+  color: #059669 !important;
+}
+html[data-theme="mint_light"]:not(.dark) .bg-lime-400,
+html[data-theme="mint_light"]:not(.dark) .bg-lime-500 {
+  background-color: #059669 !important;
+  color: #ffffff !important;
+}
+
+/* 10. ROSE BLOSSOM (Bright) */
+html[data-theme="rose_light"]:not(.dark),
+html[data-theme="rose_light"]:not(.dark) body,
+html[data-theme="rose_light"]:not(.dark) .bg-slate-50 {
+  background-color: #fceef1 !important;
+  color: #4c0519 !important;
+}
+html[data-theme="rose_light"]:not(.dark) .bg-white,
+html[data-theme="rose_light"]:not(.dark) aside,
+html[data-theme="rose_light"]:not(.dark) #desktop-sidebar,
+html[data-theme="rose_light"]:not(.dark) #mobile-top-header,
+html[data-theme="rose_light"]:not(.dark) #mobile-bottom-nav {
+  background-color: #fff9fa !important;
+}
+html[data-theme="rose_light"]:not(.dark) .bg-slate-100 {
+  background-color: #f8d7de !important;
+}
+html[data-theme="rose_light"]:not(.dark) .border-slate-200,
+html[data-theme="rose_light"]:not(.dark) .border-slate-100 {
+  border-color: #f1abb8 !important;
+}
+html[data-theme="rose_light"]:not(.dark) .text-lime-500,
+html[data-theme="rose_light"]:not(.dark) .text-lime-600 {
+  color: #e11d48 !important;
+}
+html[data-theme="rose_light"]:not(.dark) .bg-lime-400,
+html[data-theme="rose_light"]:not(.dark) .bg-lime-500 {
+  background-color: #e11d48 !important;
+  color: #ffffff !important;
+}
+
+/* 11. SUNLIGHT DAY (Bright default) */
+html[data-theme="light"]:not(.dark),
+html[data-theme="light"]:not(.dark) body,
+html[data-theme="light"]:not(.dark) .bg-slate-50 {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* ========================================================================= */
+/* LEGAL WRINKLE TEXTURE PRINT SPECIFIC STYLING                              */
+/* ========================================================================= */
+@media print {
+  #desktop-sidebar,
+  #mobile-top-header,
+  #mobile-bottom-nav,
+  header button,
+  .no-print {
+    display: none !important;
+  }
+  .legal-page-container {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+.font-editorial {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-yaawp,
+.font-instagram {
+  font-family: 'Grand Hotel', cursive, sans-serif;
+}
+
+.font-monte-carlo {
+  font-family: 'MonteCarlo', cursive, sans-serif;
+}
+
+.font-gros-ventre {
+  font-family: 'Gros Ventre', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Dark premium refined aura & accents */
+.lime-gradient,
+.brand-gradient {
+  background: linear-gradient(135deg, #818cf8 0%, #6366f1 50%, #4f46e5 100%);
+}
+
+.lime-glow,
+.brand-glow {
+  box-shadow: 0 0 20px -2px rgba(99, 102, 241, 0.35);
+}
+
+.lime-border-glow,
+.brand-border-glow {
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 0 0 12px -2px rgba(99, 102, 241, 0.2);
+}
+
+/* Atmospheric surreal lighting with subtle celestial accent */
+.ambient-glow {
+  position: relative;
+  transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s ease;
+}
+
+.ambient-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    500px circle at var(--local-mouse-x, var(--mouse-x, 50%)) var(--local-mouse-y, var(--mouse-y, 50%)),
+    rgba(99, 102, 241, 0.07),
+    transparent 50%
+  );
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.ambient-glow:hover::before,
+.ambient-glow:focus-within::before {
+  opacity: 1;
+  background: radial-gradient(
+    650px circle at var(--local-mouse-x, var(--mouse-x, 50%)) var(--local-mouse-y, var(--mouse-y, 50%)),
+    rgba(99, 102, 241, 0.12),
+    transparent 55%
+  );
+}
+
+.ambient-glow:hover,
+.ambient-glow:focus-within {
+  border-color: rgba(99, 102, 241, 0.3) !important;
+  box-shadow: 0 0 24px -2px rgba(99, 102, 241, 0.14), 0 8px 24px -6px rgba(0, 0, 0, 0.08);
+}
+
+.dark .ambient-glow::before {
+  background: radial-gradient(
+    500px circle at var(--local-mouse-x, var(--mouse-x, 50%)) var(--local-mouse-y, var(--mouse-y, 50%)),
+    rgba(99, 102, 241, 0.08),
+    transparent 50%
+  );
+  opacity: 0.6;
+}
+
+.dark .ambient-glow:hover::before,
+.dark .ambient-glow:focus-within::before {
+  opacity: 1;
+  background: radial-gradient(
+    650px circle at var(--local-mouse-x, var(--mouse-x, 50%)) var(--local-mouse-y, var(--mouse-y, 50%)),
+    rgba(99, 102, 241, 0.16),
+    transparent 55%
+  );
+}
+
+.dark .ambient-glow:hover,
+.dark .ambient-glow:focus-within {
+  border-color: rgba(99, 102, 241, 0.35) !important;
+  box-shadow: 0 0 28px -2px rgba(99, 102, 241, 0.2), 0 12px 32px -8px rgba(0, 0, 0, 0.6);
+}
+
+/* High Density Design Story Rings with Lime Accent */
+.ig-gradient {
+  background: linear-gradient(to top right, #bef264 0%, #a3e635 40%, #10b981 100%);
+}
+
+.ig-gradient-subtle {
+  background: linear-gradient(135deg, rgba(163, 230, 53, 0.18) 0%, rgba(16, 185, 129, 0.12) 100%);
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Heart burst animation on double tap */
+@keyframes heartBurst {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  30% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(0.95);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.1) translateY(-20px);
+    opacity: 0;
+  }
+}
+
+.animate-heart-burst {
+  animation: heartBurst 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Hide scrollbars for stories carousel and clean feeds */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Filter presets CSS classes */
+.filter-normal { filter: none; }
+.filter-clarendon { filter: contrast(1.2) saturate(1.25); }
+.filter-lark { filter: contrast(0.9) brightness(1.15) saturate(1.1); }
+.filter-juno { filter: contrast(1.15) saturate(1.4) hue-rotate(-10deg); }
+.filter-slumber { filter: saturate(0.85) brightness(1.05) sepia(0.2); }
+.filter-ludwig { filter: contrast(1.05) brightness(1.05) saturate(0.95); }
+.filter-reyes { filter: sepia(0.22) brightness(1.1) contrast(0.85) saturate(0.75); }
+.filter-moon { filter: grayscale(1) contrast(1.1) brightness(1.1); }
+.filter-vintage { filter: sepia(0.4) contrast(1.15) brightness(0.95); }
+.filter-dramatic { filter: contrast(1.4) brightness(0.9) saturate(1.2); }
+
+/* Content-specific Skeleton Shimmer Effect */
+@keyframes skeletonShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-shimmer::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.12) 25%,
+    rgba(255, 255, 255, 0.24) 50%,
+    rgba(255, 255, 255, 0) 80%
+  );
+  animation: skeletonShimmer 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  content: '';
+  pointer-events: none;
+}
+
+.dark .animate-shimmer::after {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 80%
+  );
+}
+
+/* Subtle Heartbeat Pulse Animation for Notification Icons */
+@keyframes notificationPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px rgba(244, 63, 94, 0));
+  }
+  35% {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 4px rgba(244, 63, 94, 0.45));
+  }
+  50% {
+    transform: scale(1.04);
+    filter: drop-shadow(0 0 2px rgba(244, 63, 94, 0.25));
+  }
+  65% {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 3px rgba(244, 63, 94, 0.35));
+  }
+  80% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px rgba(244, 63, 94, 0));
+  }
+}
+
+.animate-notification-pulse {
+  animation: notificationPulse 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform-origin: center center;
+}
+
+/* Subtle Badge Ping & Glow */
+@keyframes subtleBadgePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.92;
+  }
+}
+
+.animate-badge-pulse {
+  animation: subtleBadgePulse 2.4s ease-in-out infinite;
+}
+
+
