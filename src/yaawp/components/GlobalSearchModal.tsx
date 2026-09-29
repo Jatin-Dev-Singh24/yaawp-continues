@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { Post, UserProfile } from '../types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/yaawp/compat/router';
 
 const RECENT_SEARCHES_KEY = 'yaawp_recent_searches_v1';
 

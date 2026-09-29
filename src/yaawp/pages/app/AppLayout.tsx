@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from '@/yaawp/compat/router';
 import { useApp } from '../../context/AppContext';
 import { Sidebar } from '../../components/Sidebar';
 import { MobileHeader } from '../../components/MobileHeader';

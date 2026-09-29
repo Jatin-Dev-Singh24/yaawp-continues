@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, HelpCircle, ArrowRight, MessageCircle, ShieldCheck, UserCheck, Layers } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/yaawp/compat/router';
 
 interface FAQItem {
   id: string;

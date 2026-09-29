@@ -274,7 +274,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;`;
                 {[
                   { name: '/functions/v1/auth-confirm-code', desc: 'Validates 6-digit confirmation codes for signup' },
                   { name: '/functions/v1/sign-private-media', desc: 'Generates 15-minute temporary presigned CDN URLs' },
-                  { name: '/functions/v1/rate-limiter', desc: 'Tracks daily failed attempts with 24-hr lockout' },
+                  { name: '/functions/v1/rate-limiter', desc: 'Planned: server-side failed-attempt limits' },
                   { name: '/functions/v1/export-gdpr-data', desc: 'Bundles full user archive into downloadable JSON' }
                 ].map((fn, idx) => (
                   <div key={idx} className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 space-y-1">

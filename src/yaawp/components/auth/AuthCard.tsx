@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Eye, EyeOff, AlertCircle, Check, Sparkles, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/yaawp/compat/router';
 import { useApp } from '../../context/AppContext';
 import { PeacockWatcher } from '../PeacockWatcher';
 import { UserProfile, LegalDocType } from '../../types';

@@ -15,7 +15,7 @@ import {
 } from '../../utils/supportBot';
 import { SupportBotActionButtons } from './SupportBotActionButtons';
 import { FormattedText } from '../FormattedText';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from '@/yaawp/compat/router';
 
 interface LocalBotMessage {
   id: string;

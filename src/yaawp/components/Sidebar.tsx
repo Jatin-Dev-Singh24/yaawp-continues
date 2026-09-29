@@ -15,7 +15,7 @@ import {
   Download
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/yaawp/compat/router';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 
 interface SidebarNavItem {

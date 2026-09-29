@@ -1,6 +1,6 @@
 import React from 'react';
 import { Home, Film, Send, Compass } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/yaawp/compat/router';
 import { useApp } from '../context/AppContext';
 
 export const MobileNav: React.FC = () => {

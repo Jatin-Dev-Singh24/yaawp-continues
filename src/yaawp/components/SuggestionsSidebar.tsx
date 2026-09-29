@@ -1,6 +1,6 @@
 import React from 'react';
 import { Users as UsersIcon } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/yaawp/compat/router';
 import { useApp } from '../context/AppContext';
 import { CommunityJoinButton } from './CommunityJoinButton';
 
