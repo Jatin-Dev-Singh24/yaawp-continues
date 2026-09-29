@@ -41,11 +41,7 @@ export const ChangeSecretCodeModal: React.FC<ChangeSecretCodeModalProps> = ({
 
   const handleSendEmailOtp = () => {
     // Generate a secure 6-digit random numeric OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    setGeneratedOtp(otp);
-    setEmailOtpSent(true);
-    setErrorMsg('');
-    showToast(`Verification code sent to ${currentUser.email || 'your email'}: ${otp}`);
+    setErrorMsg('Email verification is not available yet.');
   };
 
   const handleVerifyOtp = (e: React.FormEvent) => {
@@ -54,7 +50,7 @@ export const ChangeSecretCodeModal: React.FC<ChangeSecretCodeModalProps> = ({
       setErrorMsg('Please enter the 6-digit verification code.');
       return;
     }
-    if (enteredOtp.trim() !== generatedOtp.trim()) {
+    if (!generatedOtp || enteredOtp.trim() !== generatedOtp.trim()) {
       setErrorMsg('Invalid verification code. Please check your email or resend.');
       return;
     }
@@ -202,7 +198,6 @@ export const ChangeSecretCodeModal: React.FC<ChangeSecretCodeModalProps> = ({
               <form onSubmit={handleVerifyOtp} className="space-y-4">
                 <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-between text-xs text-emerald-700 dark:text-emerald-300">
                   <span>Verification code sent!</span>
-                  <span className="font-mono font-bold tracking-widest">{generatedOtp}</span>
                 </div>
 
                 <div>

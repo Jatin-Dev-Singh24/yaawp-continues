@@ -72,18 +72,13 @@ export const ChatPasscodeLock: React.FC = () => {
     setResetError('');
     setIsSendingCode(true);
 
-    setTimeout(() => {
-      // Generate a 6-digit verification code
-      const generated = Math.floor(100000 + Math.random() * 900000).toString();
-      setSentCode(generated);
-      setIsSendingCode(false);
-      setResetStep('code_verify');
-      showToast(`Passcode reset code sent to ${emailInput}! Code: ${generated}`);
-    }, 700);
+    // Email delivery isn't connected yet, so no code is generated or shown.
+    setIsSendingCode(false);
+    setResetError('Email reset is not available yet. Contact support to reset your PIN.');
   };
 
   const handleVerifyCode = () => {
-    if (codeDigits.trim() !== sentCode.trim()) {
+    if (!sentCode || codeDigits.trim() !== sentCode.trim()) {
       setResetError('Invalid verification code. Please check your inbox.');
       return;
     }
@@ -332,7 +327,7 @@ export const ChatPasscodeLock: React.FC = () => {
           Protected Direct Messages
         </h3>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-[220px]">
-          Enter your 4-digit security PIN to access end-to-end encrypted conversations
+          Enter your 4-digit security PIN to access your private conversations on this device
         </p>
 
         {/* 4 PIN Dots */}

@@ -136,16 +136,13 @@ export const SecurityModal: React.FC = () => {
   };
 
   const handleSendPasscodeOtp = () => {
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    setPasscodeResetCode(code);
-    setIsPasscodeCodeSent(true);
-    showToast(`Verification code sent to registered email: ${code}`);
+    showToast('Email reset is not available yet.');
   };
 
   const handleResetPasscodeViaEmail = (e: React.FormEvent) => {
     e.preventDefault();
     setPinError('');
-    if (enteredPasscodeCode !== passcodeResetCode) {
+    if (!passcodeResetCode || enteredPasscodeCode !== passcodeResetCode) {
       setPinError('Invalid 6-digit email verification code');
       return;
     }
@@ -220,15 +217,12 @@ export const SecurityModal: React.FC = () => {
   };
 
   const handleSend2FAOtp = () => {
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    setTwoFaResetCode(code);
-    setIsTwoFaCodeSent(true);
-    showToast(`Verification code sent to registered email: ${code}`);
+    showToast('Email reset is not available yet.');
   };
 
   const handleReset2FAViaEmail = (e: React.FormEvent) => {
     e.preventDefault();
-    if (enteredTwoFaCode !== twoFaResetCode) {
+    if (!twoFaResetCode || enteredTwoFaCode !== twoFaResetCode) {
       showToast('Invalid 6-digit email verification code');
       return;
     }
@@ -1011,7 +1005,7 @@ export const SecurityModal: React.FC = () => {
                   </span>
                 </div>
                 <p className="text-xs text-zinc-400 leading-relaxed">
-                  Accounts that fail 5 consecutive authentication attempts trigger an automatic 24-hour lockout and an administrative security spike alert to prevent credential stuffing.
+                  5 wrong chat PINs in a row lock the chat on this device for 60 seconds. The lock survives page refreshes and cannot be skipped.
                 </p>
 
                 <div className="p-3 rounded-lg bg-zinc-800/60 border border-zinc-750 flex items-center justify-between text-xs">
@@ -1024,8 +1018,8 @@ export const SecurityModal: React.FC = () => {
 
                 {isLockedOut && (
                   <div className="p-3 rounded-lg bg-rose-950/40 border border-rose-900/60 text-rose-300 text-xs space-y-1">
-                    <p className="font-bold">24-Hour Lockout Active</p>
-                    <p className="text-[11px]">Remaining lockout duration: ~{lockoutRemainingHours} hours</p>
+                    <p className="font-bold">Chat Locked</p>
+                    <p className="text-[11px]">Try again in about a minute</p>
                   </div>
                 )}
 
@@ -1037,7 +1031,7 @@ export const SecurityModal: React.FC = () => {
                   </div>
                   <ul className="text-[11px] text-zinc-400 space-y-1 pl-4 list-disc leading-relaxed">
                     <li>It <strong className="text-zinc-200">clears the failed authentication tally back to 0/5</strong>.</li>
-                    <li>It <strong className="text-zinc-200">immediately lifts any active 24-hour lockout penalty</strong>, allowing you to sign in again without waiting.</li>
+                    <li>It <strong className="text-zinc-200">does not lift an active lock</strong> — you must wait for the timer to end.</li>
                     <li>It restores all <strong className="text-zinc-200">5 login attempts</strong> fresh.</li>
                     <li>It records an event in the Audit Trail for security tracking.</li>
                   </ul>
