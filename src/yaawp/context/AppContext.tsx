@@ -473,6 +473,7 @@ interface AppContextType {
   isProfileHiddenFromUser: (userId: string) => boolean;
   // Supabase Auth & Session State
   supabaseSession: Session | null;
+  isAuthReady: boolean;
   isSupabaseConfigured: boolean;
   // Preferred Language & Translations
   preferredLanguage: string;
@@ -539,6 +540,7 @@ const getStoredStateItem = (subKey: string): string | null => {
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Supabase session state
   const [supabaseSession, setSupabaseSession] = useState<Session | null>(null);
+  const [isAuthReady, setIsAuthReady] = useState<boolean>(!isSupabaseConfigured);
 
   // Initialize Supabase session check on load
   useEffect(() => {
@@ -608,6 +610,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // Check active session on load
     supabase.auth.getSession().then(({ data: { session }, error }) => {
       if (!isMounted) return;
+      setIsAuthReady(true);
       if (error) {
         console.warn('Supabase getSession error:', error.message);
         return;
@@ -624,6 +627,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setSupabaseSession(session);
       if (session?.user) {
         handleUserSessionSync(session.user);
+      } else {
+        setIsAuthenticated(false);
       }
     });
 
