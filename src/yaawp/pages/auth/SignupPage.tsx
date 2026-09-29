@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/yaawp/compat/router';
 import { ArrowLeft } from 'lucide-react';
 import { AuthCard } from '../../components/auth';
 

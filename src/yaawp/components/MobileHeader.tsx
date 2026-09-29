@@ -1,6 +1,6 @@
 import React from 'react';
 import { Heart, Moon, Sun, PenSquare, Download } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/yaawp/compat/router';
 import { useApp } from '../context/AppContext';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 
