@@ -1,3 +1,4 @@
+import { hashSecret, verifySecret } from '../lib/secureHash';
 import React, { createContext, useContext, useState, useEffect, useMemo, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import type { Session } from '@supabase/supabase-js';
@@ -596,7 +597,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         [user.id]: updatedUser
       }));
       setIsAuthenticated(true);
-      localStorage.setItem('yaawp_authenticated', 'true');
 
       // Check if user still needs to pick a personalized unique handle
       const customUsernamePicked = localStorage.getItem(`yaawp_custom_username_${user.id}`);
@@ -1320,10 +1320,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [activeLegalDoc, setActiveLegalDoc] = useState<LegalDocType>('terms');
   const [isCreateAccountModalOpen, setIsCreateAccountModalOpen] = useState<boolean>(false);
 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    const saved = localStorage.getItem('yaawp_authenticated');
-    return saved === 'true';
-  });
+  // Signed-in state comes ONLY from a real Supabase session (see session
+  // listener). Never trust a browser flag for this.
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [authModalMode, setAuthModalMode] = useState<'signup' | 'login'>('signup');
   const [isUsernameSetupRequired, setIsUsernameSetupRequired] = useState<boolean>(() => {
     return localStorage.getItem('yaawp_needs_username_prompt') === 'true';
@@ -1519,16 +1518,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isSecurityModalOpen, setIsSecurityModalOpen] = useState<boolean>(false);
   const [isBehindTheScenesOpen, setIsBehindTheScenesOpen] = useState<boolean>(false);
   const [chatPasscode, setChatPasscodeState] = useState<string | null>(() => {
-    return localStorage.getItem('lumina_chat_passcode') || null;
+    const v = localStorage.getItem('lumina_chat_passcode');
+    if (v && !v.startsWith('h1$')) { localStorage.removeItem('lumina_chat_passcode'); return null; }
+    return v || null;
   });
   const [isChatLocked, setIsChatLocked] = useState<boolean>(() => {
-    return Boolean(localStorage.getItem('lumina_chat_passcode'));
+    const v = localStorage.getItem('lumina_chat_passcode');
+    return Boolean(v && v.startsWith('h1$'));
   });
-  const [failedLoginAttempts, setFailedLoginAttempts] = useState<number>(0);
-  const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
+  const [failedLoginAttempts, setFailedLoginAttempts] = useState<number>(() => {
+    try { return JSON.parse(localStorage.getItem('yaawp_pin_failures') || '{}').count || 0; } catch { return 0; }
+  });
+  const [lockoutUntil, setLockoutUntil] = useState<number | null>(() => {
+    try { return JSON.parse(localStorage.getItem('yaawp_pin_failures') || '{}').until || null; } catch { return null; }
+  });
   const [failedLoginsAlert, setFailedLoginsAlert] = useState<boolean>(false);
   const [twoFactorPassword, setTwoFactorPasswordState] = useState<string | null>(() => {
-    return localStorage.getItem('yaawp_2fa_password') || null;
+    const v = localStorage.getItem('yaawp_2fa_password');
+    if (v && !v.startsWith('h1$')) { localStorage.removeItem('yaawp_2fa_password'); return null; }
+    return v || null;
   });
   const [twoFactorEnabled, setTwoFactorEnabledState] = useState<boolean>(() => {
     const hasPw = Boolean(localStorage.getItem('yaawp_2fa_password'));
@@ -1542,38 +1550,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return localStorage.getItem('lumina_followers_private') === 'true';
   });
 
-  const [auditLogs, setAuditLogs] = useState<SecurityAuditLog[]>([
-    {
-      id: 'log_1',
-      action: 'Session Authentication & Key Exchange',
-      actor: '@' + currentUser.username,
-      ipAddress: '192.168.1.104',
-      userAgent: 'Chrome 128 / macOS Sequoia',
-      timestamp: '2 mins ago',
-      status: 'success',
-      details: 'JWT session verified via Supabase Auth (HS256 verified signature)'
-    },
-    {
-      id: 'log_2',
-      action: 'RLS Query: Direct Messages Ingress',
-      actor: '@' + currentUser.username,
-      ipAddress: '192.168.1.104',
-      userAgent: 'Client Applet',
-      timestamp: '8 mins ago',
-      status: 'success',
-      details: 'Checked policy: auth.uid() = participant_id on table "chat_messages"'
-    },
-    {
-      id: 'log_3',
-      action: 'Signed Storage URL Generated',
-      actor: '@' + currentUser.username,
-      ipAddress: '192.168.1.104',
-      userAgent: 'Client Applet',
-      timestamp: '25 mins ago',
-      status: 'success',
-      details: 'Generated 15-minute expiring token for private media asset'
+  // Real activity recorded on this device only (no invented entries).
+  const [auditLogs, setAuditLogs] = useState<SecurityAuditLog[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('yaawp_device_activity') || '[]');
+    } catch {
+      return [];
     }
-  ]);
+  });
 
   const [joinRequests, setJoinRequests] = useState<CommunityJoinRequest[]>([]);
 
@@ -3440,8 +3424,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem(`${LOCAL_STORAGE_KEY}_user`, JSON.stringify(newProfile));
     localStorage.setItem('yaawp_terms_agreed_v1', 'true');
     localStorage.setItem('yaawp_terms_agreed_time', String(Date.now()));
-    localStorage.setItem('yaawp_authenticated', 'true');
-    setIsAuthenticated(true);
+    setIsAuthenticated(Boolean(supabaseSession));
     if (data.preferred_language) {
       setPreferredLanguage(data.preferred_language);
     }
@@ -3528,8 +3511,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCurrentUser(fullProfile);
     setViewedUserId(fullProfile.id);
     localStorage.setItem(`${LOCAL_STORAGE_KEY}_user`, JSON.stringify(fullProfile));
-    localStorage.setItem('yaawp_authenticated', 'true');
-    setIsAuthenticated(true);
     showToast(`Switched account to @${fullProfile.username}`);
   };
 
@@ -5015,19 +4996,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       id: `log_${Date.now()}`,
       action,
       actor: '@' + currentUser.username,
-      ipAddress: '192.168.1.104',
-      userAgent: 'Client Applet',
-      timestamp: 'Just now',
+      ipAddress: 'Not recorded (this device)',
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'Unknown',
+      timestamp: new Date().toLocaleString(),
       status,
       details
     };
-    setAuditLogs(prev => [newLog, ...prev.slice(0, 49)]);
+    setAuditLogs(prev => {
+      const next = [newLog, ...prev.slice(0, 49)];
+      try { localStorage.setItem('yaawp_device_activity', JSON.stringify(next)); } catch {}
+      return next;
+    });
   };
 
   const setChatPasscode = (pin: string | null) => {
     if (pin) {
-      localStorage.setItem('lumina_chat_passcode', pin);
-      setChatPasscodeState(pin);
+      const hashed = hashSecret(pin);
+      localStorage.setItem('lumina_chat_passcode', hashed);
+      setChatPasscodeState(hashed);
       setIsChatLocked(false);
       addAuditLog('Chat Passcode Configured', '4-digit PIN lock enabled for Direct Messages', 'success');
       showToast('Chat passcode successfully set!');
@@ -5041,13 +5027,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const unlockChat = (pin: string): boolean => {
-    if (chatPasscode && pin === chatPasscode) {
+    if (lockoutUntil !== null && Date.now() < lockoutUntil) {
+      showToast('Too many wrong PINs. Try again in a minute.');
+      return false;
+    }
+    if (verifySecret(pin, chatPasscode)) {
+      setFailedLoginAttempts(0);
+      setLockoutUntil(null);
+      localStorage.removeItem('yaawp_pin_failures');
       setIsChatLocked(false);
       addAuditLog('Chat Unlocked', 'Valid PIN entered', 'success');
       showToast('Chat unlocked');
       return true;
     }
     addAuditLog('Chat Unlock Failed', 'Incorrect PIN attempt', 'error');
+    recordFailedLogin();
     showToast('Incorrect passcode');
     return false;
   };
@@ -5058,16 +5052,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (next >= 5) {
         const lockoutTime = Date.now() + 60000;
         setLockoutUntil(lockoutTime);
+        localStorage.setItem('yaawp_pin_failures', JSON.stringify({ count: 0, until: lockoutTime }));
+        return 0;
         setFailedLoginsAlert(true);
         addAuditLog('Account Lockout Triggered', '5 consecutive failed password attempts. Account locked for 60s.', 'error');
       } else {
         addAuditLog('Failed Authentication Attempt', `Attempt ${next} of 5.`, 'warning');
+        localStorage.setItem('yaawp_pin_failures', JSON.stringify({ count: next, until: null }));
       }
       return next;
     });
   };
 
   const resetFailedLogins = () => {
+    if (lockoutUntil !== null && Date.now() < lockoutUntil) {
+      showToast('The lock lifts automatically when the timer ends.');
+      return;
+    }
+    localStorage.removeItem('yaawp_pin_failures');
     setFailedLoginAttempts(0);
     setLockoutUntil(null);
     setFailedLoginsAlert(false);
@@ -5076,7 +5078,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const verifyPreviousPasscode = (pin: string): boolean => {
-    return Boolean(chatPasscode && pin === chatPasscode);
+    return verifySecret(pin, chatPasscode);
   };
 
   const setTwoFactorEnabled = (val: boolean) => {
@@ -5089,9 +5091,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       showToast('2FA security password must be at least 4 characters');
       return false;
     }
-    localStorage.setItem('yaawp_2fa_password', password);
+    localStorage.setItem('yaawp_2fa_password', hashSecret(password));
     localStorage.setItem('lumina_2fa_enabled', 'true');
-    setTwoFactorPasswordState(password);
+    setTwoFactorPasswordState(hashSecret(password));
     setTwoFactorEnabledState(true);
     addAuditLog('2FA Protection Activated', 'Account two-factor protection enabled with personal security password', 'success');
     showToast('2FA Protection successfully activated!');
@@ -5099,7 +5101,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const changeTwoFactorPassword = (currentPw: string, newPw: string): boolean => {
-    if (currentPw !== twoFactorPassword) {
+    if (!verifySecret(currentPw, twoFactorPassword)) {
       showToast('Current 2FA password is incorrect');
       return false;
     }
@@ -5107,15 +5109,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       showToast('New 2FA password must be at least 4 characters');
       return false;
     }
-    localStorage.setItem('yaawp_2fa_password', newPw);
-    setTwoFactorPasswordState(newPw);
+    localStorage.setItem('yaawp_2fa_password', hashSecret(newPw));
+    setTwoFactorPasswordState(hashSecret(newPw));
     addAuditLog('2FA Password Changed', 'User updated their two-factor security password', 'success');
     showToast('2FA security password updated successfully!');
     return true;
   };
 
   const disableTwoFactorWithPassword = (currentPw: string): boolean => {
-    if (currentPw !== twoFactorPassword) {
+    if (!verifySecret(currentPw, twoFactorPassword)) {
       showToast('Current 2FA password is incorrect');
       return false;
     }
@@ -5128,7 +5130,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return true;
   };
 
-  const resetTwoFactorViaEmail = (code: string, newPw: string): boolean => {
+  const resetTwoFactorViaEmail = (_code: string, _newPw: string): boolean => {
+    showToast('Email reset is not available yet.');
+    return false;
+  };
+  const _legacyResetTwoFactorViaEmail = (code: string, newPw: string): boolean => {
     if (!code || code.trim().length !== 6) {
       showToast('Please enter a valid 6-digit verification code');
       return false;
@@ -5267,7 +5273,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setIsProfileMenuOpen(false);
     setIsAuthenticated(false);
     setIsUsernameSetupRequired(false);
-    localStorage.removeItem('yaawp_authenticated');
     localStorage.removeItem('yaawp_needs_username_prompt');
     showToast('Signed out of session');
   };
@@ -5295,7 +5300,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (data.session) {
         setSupabaseSession(data.session);
         setIsAuthenticated(true);
-        localStorage.setItem('yaawp_authenticated', 'true');
         if (data.user) {
           const profile: UserProfile = {
             id: data.user.id,
@@ -5341,60 +5345,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     }
 
-    // Client-mode Google sign-in fallback with verified profile
-    const googleEmail = 'jatindevsingh644@gmail.com';
-    const rawUsername = 'jatindev';
-    const googleName = 'Jatin Dev Singh';
-    const googleAvatar = `https://api.dicebear.com/7.x/identicon/svg?seed=${rawUsername}`;
-
-    const existing = (Object.values(userProfiles) as UserProfile[]).find(
-      p => p.email?.toLowerCase() === googleEmail.toLowerCase()
-    );
-
-    if (existing) {
-      switchAccount(existing.id);
-      setIsAuthenticated(true);
-      localStorage.setItem('yaawp_authenticated', 'true');
-      showToast(`Welcome back via Google, @${existing.username}`);
-      return { success: true };
-    }
-
-    // Determine initial handle, ensure it is unique
-    let chosenUsername = sanitizeUsername(rawUsername);
-    const availability = await checkUsernameAvailability(chosenUsername, userProfiles);
-    if (!availability.isAvailable) {
-      chosenUsername = availability.suggestions[0] || `${chosenUsername}_${Date.now().toString().slice(-4)}`;
-    }
-
-    const newUserId = `user_google_${Date.now()}`;
-    const newGoogleUser: UserProfile = {
-      id: newUserId,
-      username: chosenUsername,
-      name: googleName,
-      avatar: googleAvatar,
-      bio: 'Connected via Google Account ✨',
-      website: '',
-      email: googleEmail,
-      followersCount: 1,
-      followingCount: 4,
-      postsCount: 0,
-      highlights: [],
-      isVerified: true
+    return {
+      success: false,
+      error: 'Google sign-in needs the backend to be connected. Please try again later.'
     };
-
-    setUserProfiles(prev => ({
-      ...prev,
-      [newUserId]: newGoogleUser
-    }));
-    setCurrentUser(newGoogleUser);
-    setIsAuthenticated(true);
-    localStorage.setItem('yaawp_authenticated', 'true');
-    setHasAgreedToTerms(true);
-    setTermsAgreedTimestamp(Date.now());
-    // Trigger username onboarding prompt for new Google account
-    setIsUsernameSetupRequired(true);
-    showToast(`Signed in with Google as ${googleEmail}`);
-    return { success: true };
   };
 
   const [isAccountDeactivated, setIsAccountDeactivated] = useState<boolean>(() => {
@@ -5405,7 +5359,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setIsAccountDeactivated(true);
     localStorage.setItem('yaawp_account_deactivated', 'true');
     localStorage.setItem('yaawp_deactivation_reason', reason);
-    localStorage.removeItem('yaawp_authenticated');
     setIsAuthenticated(false);
     showToast('Your account is now deactivated. Log in at any time to reactivate.');
   };
