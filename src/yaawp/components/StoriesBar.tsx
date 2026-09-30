@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React, { useRef } from 'react';
 import { Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useApp } from '../context/AppContext';

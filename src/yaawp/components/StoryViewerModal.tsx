@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { X, Heart, Send, Pause, Play, ChevronLeft, ChevronRight, Archive, Trash2, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';

@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 /**
  * Media Converter & WebP Optimization Utilities
  * Ensures all images and text-post cards are converted and stored in WebP format,

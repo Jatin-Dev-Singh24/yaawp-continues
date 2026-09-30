@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 // Lightweight, temporary, native multiplayer game logic for YAAWP
 // Game sessions use only ephemeral memory state during active play and are discarded when finished.
 

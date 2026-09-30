@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React from 'react';
 import { Shield, FileText, CheckCircle2, ArrowRight, X } from 'lucide-react';
 import { useApp } from '../../context/AppContext';

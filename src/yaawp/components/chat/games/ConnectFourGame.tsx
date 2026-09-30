@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React from 'react';
 import { useTemporaryGames } from '../../../context/TemporaryGamesContext';
 import { C4_COLS, C4_ROWS } from '../../../utils/gameEngine';

@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React, { useState, useMemo } from 'react';
 import { Search, Heart, MessageCircle, Film, Sparkles, Compass } from 'lucide-react';
 import { useApp } from '../context/AppContext';

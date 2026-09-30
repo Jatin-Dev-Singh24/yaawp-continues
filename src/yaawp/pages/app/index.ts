@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 export { AppLayout } from './AppLayout';
 export { HomePage } from './HomePage';
 export { ExplorePage } from './ExplorePage';

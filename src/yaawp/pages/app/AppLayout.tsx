@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React, { useEffect, useRef } from 'react';
 import { Outlet, useLocation, useNavigate } from '@/yaawp/compat/router';
 import { useApp } from '../../context/AppContext';

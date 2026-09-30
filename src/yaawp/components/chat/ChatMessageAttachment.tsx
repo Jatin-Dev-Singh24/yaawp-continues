@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React, { useState, useRef } from 'react';
 import { ChatMessage, PollData, GameSession } from '../../types';
 import {

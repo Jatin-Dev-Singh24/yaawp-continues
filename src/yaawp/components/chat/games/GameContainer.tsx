@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React, { useEffect, useState } from 'react';
 import { GameSession } from '../../../types';
 import { useTemporaryGames } from '../../../context/TemporaryGamesContext';

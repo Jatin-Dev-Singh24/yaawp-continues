@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Clock,

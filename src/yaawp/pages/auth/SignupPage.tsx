@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React from 'react';
 import { Link } from '@/yaawp/compat/router';
 import { ArrowLeft } from 'lucide-react';

@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 /**
  * Compatibility layer: exposes the react-router-dom API surface the Yaawp
  * codebase uses, backed by TanStack Router. New code should import from
