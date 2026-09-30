@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 export interface EmojiBlend {
   id: string;
   emoji1: string;

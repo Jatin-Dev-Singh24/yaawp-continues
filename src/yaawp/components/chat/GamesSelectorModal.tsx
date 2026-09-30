@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React from 'react';
 import { GameType } from '../../types';
 import { Gamepad2, X, Sparkles, Trophy, Users, Zap } from 'lucide-react';

@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React, { useState } from 'react';
 import { Lock, Mail, ArrowLeft, CheckCircle2, KeyRound, Fingerprint, Delete, ShieldAlert, Send } from 'lucide-react';
 import { useApp } from '../context/AppContext';

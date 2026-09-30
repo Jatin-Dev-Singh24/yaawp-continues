@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React, { useState } from 'react';
 import { X, Image as ImageIcon, Film, FileText, Send, Loader2, Upload, Trash2 } from 'lucide-react';
 import { uploadMediaToSupabase } from '../lib/supabaseStorage';

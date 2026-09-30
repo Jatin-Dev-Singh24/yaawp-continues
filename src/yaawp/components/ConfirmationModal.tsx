@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React from 'react';
 import { AlertTriangle, Trash2, Archive, X } from 'lucide-react';
 

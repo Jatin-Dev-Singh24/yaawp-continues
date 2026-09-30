@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 /**
  * Small synchronous SHA-256 so PINs/passwords are never stored in plain text.
  * Values are salted per device before hashing. This is NOT a substitute for

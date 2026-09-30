@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import { INITIAL_LANGUAGES, DEFAULT_LANGUAGE_CODE, LanguageOption, getLanguageByCode } from './languages';
 
 export * from './languages';

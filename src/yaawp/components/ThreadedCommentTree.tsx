@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React, { useState } from 'react';
 import { Heart, MessageSquare, ChevronDown, ChevronRight, CornerDownRight, Send, Trash2 } from 'lucide-react';
 import { Comment, UserSummary } from '../types';

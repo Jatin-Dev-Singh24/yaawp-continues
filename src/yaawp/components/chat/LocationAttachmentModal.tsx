@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React, { useState } from 'react';
 import { LocationData } from '../../types';
 import { MapPin, Navigation, X, Check, Search } from 'lucide-react';

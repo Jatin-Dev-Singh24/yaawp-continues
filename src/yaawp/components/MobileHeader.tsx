@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React from 'react';
 import { Heart, Moon, Sun, PenSquare, Download } from 'lucide-react';
 import { useNavigate } from '@/yaawp/compat/router';

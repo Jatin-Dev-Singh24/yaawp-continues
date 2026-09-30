@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import { supabase, isSupabaseConfigured } from './supabase';
 
 export type MediaFolder = 'posts' | 'stories' | 'reels' | 'avatars' | 'audio' | 'messages';

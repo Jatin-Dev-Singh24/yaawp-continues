@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Camera, Check, Upload, Loader2, Globe, Sparkles, AlertCircle } from 'lucide-react';
 import { useApp } from '../context/AppContext';

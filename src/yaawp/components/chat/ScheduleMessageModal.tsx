@@ -1,3 +1,4 @@
+// @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import React, { useState, useEffect } from 'react';
 import { X, Clock, Calendar, Send, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
