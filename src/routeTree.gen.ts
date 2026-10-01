@@ -9,50 +9,359 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as YRouteImport } from './routes/_y'
+import { Route as YIndexRouteImport } from './routes/_y/index'
+import { Route as YAppRouteImport } from './routes/_y/app'
+import { Route as YLegalRouteImport } from './routes/_y/legal'
+import { Route as YAppChatsRouteImport } from './routes/_y/app.chats'
+import { Route as YAppCommunitiesRouteImport } from './routes/_y/app.communities'
+import { Route as YAppExploreRouteImport } from './routes/_y/app.explore'
+import { Route as YAppHomeRouteImport } from './routes/_y/app.home'
+import { Route as YAppLegalRouteImport } from './routes/_y/app.legal'
+import { Route as YAppNotificationsRouteImport } from './routes/_y/app.notifications'
+import { Route as YAppProfileRouteImport } from './routes/_y/app.profile'
+import { Route as YAppReelsRouteImport } from './routes/_y/app.reels'
+import { Route as YAppSettingsRouteImport } from './routes/_y/app.settings'
+import { Route as YAuthLoginRouteImport } from './routes/_y/auth.login'
+import { Route as YAuthSignupRouteImport } from './routes/_y/auth.signup'
 
-const IndexRoute = IndexRouteImport.update({
+const YRoute = YRouteImport.update({
+  id: '/_y',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const YIndexRoute = YIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => YRoute,
+} as any)
+const YAppRoute = YAppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => YRoute,
+} as any)
+const YLegalRoute = YLegalRouteImport.update({
+  id: '/legal',
+  path: '/legal',
+  getParentRoute: () => YRoute,
+} as any)
+const YAppChatsRoute = YAppChatsRouteImport.update({
+  id: '/chats',
+  path: '/chats',
+  getParentRoute: () => YAppRoute,
+} as any)
+const YAppCommunitiesRoute = YAppCommunitiesRouteImport.update({
+  id: '/communities',
+  path: '/communities',
+  getParentRoute: () => YAppRoute,
+} as any)
+const YAppExploreRoute = YAppExploreRouteImport.update({
+  id: '/explore',
+  path: '/explore',
+  getParentRoute: () => YAppRoute,
+} as any)
+const YAppHomeRoute = YAppHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => YAppRoute,
+} as any)
+const YAppLegalRoute = YAppLegalRouteImport.update({
+  id: '/legal',
+  path: '/legal',
+  getParentRoute: () => YAppRoute,
+} as any)
+const YAppNotificationsRoute = YAppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => YAppRoute,
+} as any)
+const YAppProfileRoute = YAppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => YAppRoute,
+} as any)
+const YAppReelsRoute = YAppReelsRouteImport.update({
+  id: '/reels',
+  path: '/reels',
+  getParentRoute: () => YAppRoute,
+} as any)
+const YAppSettingsRoute = YAppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => YAppRoute,
+} as any)
+const YAuthLoginRoute = YAuthLoginRouteImport.update({
+  id: '/auth/login',
+  path: '/auth/login',
+  getParentRoute: () => YRoute,
+} as any)
+const YAuthSignupRoute = YAuthSignupRouteImport.update({
+  id: '/auth/signup',
+  path: '/auth/signup',
+  getParentRoute: () => YRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof YIndexRoute
+  '/app': typeof YAppRouteWithChildren
+  '/legal': typeof YLegalRoute
+  '/app/chats': typeof YAppChatsRoute
+  '/app/communities': typeof YAppCommunitiesRoute
+  '/app/explore': typeof YAppExploreRoute
+  '/app/home': typeof YAppHomeRoute
+  '/app/legal': typeof YAppLegalRoute
+  '/app/notifications': typeof YAppNotificationsRoute
+  '/app/profile': typeof YAppProfileRoute
+  '/app/reels': typeof YAppReelsRoute
+  '/app/settings': typeof YAppSettingsRoute
+  '/auth/login': typeof YAuthLoginRoute
+  '/auth/signup': typeof YAuthSignupRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/app': typeof YAppRouteWithChildren
+  '/legal': typeof YLegalRoute
+  '/': typeof YIndexRoute
+  '/app/chats': typeof YAppChatsRoute
+  '/app/communities': typeof YAppCommunitiesRoute
+  '/app/explore': typeof YAppExploreRoute
+  '/app/home': typeof YAppHomeRoute
+  '/app/legal': typeof YAppLegalRoute
+  '/app/notifications': typeof YAppNotificationsRoute
+  '/app/profile': typeof YAppProfileRoute
+  '/app/reels': typeof YAppReelsRoute
+  '/app/settings': typeof YAppSettingsRoute
+  '/auth/login': typeof YAuthLoginRoute
+  '/auth/signup': typeof YAuthSignupRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_y': typeof YRouteWithChildren
+  '/_y/app': typeof YAppRouteWithChildren
+  '/_y/legal': typeof YLegalRoute
+  '/_y/': typeof YIndexRoute
+  '/_y/app/chats': typeof YAppChatsRoute
+  '/_y/app/communities': typeof YAppCommunitiesRoute
+  '/_y/app/explore': typeof YAppExploreRoute
+  '/_y/app/home': typeof YAppHomeRoute
+  '/_y/app/legal': typeof YAppLegalRoute
+  '/_y/app/notifications': typeof YAppNotificationsRoute
+  '/_y/app/profile': typeof YAppProfileRoute
+  '/_y/app/reels': typeof YAppReelsRoute
+  '/_y/app/settings': typeof YAppSettingsRoute
+  '/_y/auth/login': typeof YAuthLoginRoute
+  '/_y/auth/signup': typeof YAuthSignupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/legal'
+    | '/app/chats'
+    | '/app/communities'
+    | '/app/explore'
+    | '/app/home'
+    | '/app/legal'
+    | '/app/notifications'
+    | '/app/profile'
+    | '/app/reels'
+    | '/app/settings'
+    | '/auth/login'
+    | '/auth/signup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/app'
+    | '/legal'
+    | '/'
+    | '/app/chats'
+    | '/app/communities'
+    | '/app/explore'
+    | '/app/home'
+    | '/app/legal'
+    | '/app/notifications'
+    | '/app/profile'
+    | '/app/reels'
+    | '/app/settings'
+    | '/auth/login'
+    | '/auth/signup'
+  id:
+    | '__root__'
+    | '/_y'
+    | '/_y/app'
+    | '/_y/legal'
+    | '/_y/'
+    | '/_y/app/chats'
+    | '/_y/app/communities'
+    | '/_y/app/explore'
+    | '/_y/app/home'
+    | '/_y/app/legal'
+    | '/_y/app/notifications'
+    | '/_y/app/profile'
+    | '/_y/app/reels'
+    | '/_y/app/settings'
+    | '/_y/auth/login'
+    | '/_y/auth/signup'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  YRoute: typeof YRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_y': {
+      id: '/_y'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof YRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_y/': {
+      id: '/_y/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof YIndexRouteImport
+      parentRoute: typeof YRoute
+    }
+    '/_y/app': {
+      id: '/_y/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof YAppRouteImport
+      parentRoute: typeof YRoute
+    }
+    '/_y/legal': {
+      id: '/_y/legal'
+      path: '/legal'
+      fullPath: '/legal'
+      preLoaderRoute: typeof YLegalRouteImport
+      parentRoute: typeof YRoute
+    }
+    '/_y/app/chats': {
+      id: '/_y/app/chats'
+      path: '/chats'
+      fullPath: '/app/chats'
+      preLoaderRoute: typeof YAppChatsRouteImport
+      parentRoute: typeof YAppRoute
+    }
+    '/_y/app/communities': {
+      id: '/_y/app/communities'
+      path: '/communities'
+      fullPath: '/app/communities'
+      preLoaderRoute: typeof YAppCommunitiesRouteImport
+      parentRoute: typeof YAppRoute
+    }
+    '/_y/app/explore': {
+      id: '/_y/app/explore'
+      path: '/explore'
+      fullPath: '/app/explore'
+      preLoaderRoute: typeof YAppExploreRouteImport
+      parentRoute: typeof YAppRoute
+    }
+    '/_y/app/home': {
+      id: '/_y/app/home'
+      path: '/home'
+      fullPath: '/app/home'
+      preLoaderRoute: typeof YAppHomeRouteImport
+      parentRoute: typeof YAppRoute
+    }
+    '/_y/app/legal': {
+      id: '/_y/app/legal'
+      path: '/legal'
+      fullPath: '/app/legal'
+      preLoaderRoute: typeof YAppLegalRouteImport
+      parentRoute: typeof YAppRoute
+    }
+    '/_y/app/notifications': {
+      id: '/_y/app/notifications'
+      path: '/notifications'
+      fullPath: '/app/notifications'
+      preLoaderRoute: typeof YAppNotificationsRouteImport
+      parentRoute: typeof YAppRoute
+    }
+    '/_y/app/profile': {
+      id: '/_y/app/profile'
+      path: '/profile'
+      fullPath: '/app/profile'
+      preLoaderRoute: typeof YAppProfileRouteImport
+      parentRoute: typeof YAppRoute
+    }
+    '/_y/app/reels': {
+      id: '/_y/app/reels'
+      path: '/reels'
+      fullPath: '/app/reels'
+      preLoaderRoute: typeof YAppReelsRouteImport
+      parentRoute: typeof YAppRoute
+    }
+    '/_y/app/settings': {
+      id: '/_y/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof YAppSettingsRouteImport
+      parentRoute: typeof YAppRoute
+    }
+    '/_y/auth/login': {
+      id: '/_y/auth/login'
+      path: '/auth/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof YAuthLoginRouteImport
+      parentRoute: typeof YRoute
+    }
+    '/_y/auth/signup': {
+      id: '/_y/auth/signup'
+      path: '/auth/signup'
+      fullPath: '/auth/signup'
+      preLoaderRoute: typeof YAuthSignupRouteImport
+      parentRoute: typeof YRoute
     }
   }
 }
 
+interface YAppRouteChildren {
+  YAppChatsRoute: typeof YAppChatsRoute
+  YAppCommunitiesRoute: typeof YAppCommunitiesRoute
+  YAppExploreRoute: typeof YAppExploreRoute
+  YAppHomeRoute: typeof YAppHomeRoute
+  YAppLegalRoute: typeof YAppLegalRoute
+  YAppNotificationsRoute: typeof YAppNotificationsRoute
+  YAppProfileRoute: typeof YAppProfileRoute
+  YAppReelsRoute: typeof YAppReelsRoute
+  YAppSettingsRoute: typeof YAppSettingsRoute
+}
+
+const YAppRouteChildren: YAppRouteChildren = {
+  YAppChatsRoute: YAppChatsRoute,
+  YAppCommunitiesRoute: YAppCommunitiesRoute,
+  YAppExploreRoute: YAppExploreRoute,
+  YAppHomeRoute: YAppHomeRoute,
+  YAppLegalRoute: YAppLegalRoute,
+  YAppNotificationsRoute: YAppNotificationsRoute,
+  YAppProfileRoute: YAppProfileRoute,
+  YAppReelsRoute: YAppReelsRoute,
+  YAppSettingsRoute: YAppSettingsRoute,
+}
+
+const YAppRouteWithChildren = YAppRoute._addFileChildren(YAppRouteChildren)
+
+interface YRouteChildren {
+  YAppRoute: typeof YAppRouteWithChildren
+  YLegalRoute: typeof YLegalRoute
+  YIndexRoute: typeof YIndexRoute
+  YAuthLoginRoute: typeof YAuthLoginRoute
+  YAuthSignupRoute: typeof YAuthSignupRoute
+}
+
+const YRouteChildren: YRouteChildren = {
+  YAppRoute: YAppRouteWithChildren,
+  YLegalRoute: YLegalRoute,
+  YIndexRoute: YIndexRoute,
+  YAuthLoginRoute: YAuthLoginRoute,
+  YAuthSignupRoute: YAuthSignupRoute,
+}
+
+const YRouteWithChildren = YRoute._addFileChildren(YRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  YRoute: YRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
