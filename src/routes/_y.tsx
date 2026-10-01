@@ -10,7 +10,7 @@ export const Route = createFileRoute("/_y")({
     links: [
       { rel: "stylesheet", href: yaawpCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Monte+Carlo&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=MonteCarlo&display=swap" },
       { rel: "manifest", href: "/manifest.json" },
     ],
   }),
