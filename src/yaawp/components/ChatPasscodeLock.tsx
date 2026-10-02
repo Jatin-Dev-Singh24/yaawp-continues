@@ -39,11 +39,10 @@ export const ChatPasscodeLock: React.FC = () => {
     setPin(nextPin);
 
     if (nextPin.length === 4) {
-      setTimeout(() => {
-        const success = unlockChat(nextPin);
+      setTimeout(async () => {
+        const success = await unlockChat(nextPin);
         if (!success) {
           setErrorShake(true);
-          recordFailedLogin();
           setTimeout(() => {
             setPin('');
             setErrorShake(false);
@@ -57,11 +56,6 @@ export const ChatPasscodeLock: React.FC = () => {
 
   const handleBackspace = () => {
     setPin(prev => prev.slice(0, -1));
-  };
-
-  const handleBiometricUnlock = () => {
-    showToast('Biometric Face ID / Touch ID Authenticated');
-    unlockChat(chatPasscode);
   };
 
   // --- Email Reset Handlers ---
@@ -367,15 +361,8 @@ export const ChatPasscodeLock: React.FC = () => {
             </button>
           ))}
 
-          {/* Biometric Face/Touch ID Simulation */}
-          <button
-            type="button"
-            onClick={handleBiometricUnlock}
-            className="h-14 rounded-xl bg-white/60 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 active:scale-95 transition-all flex items-center justify-center cursor-pointer"
-            title="Biometric Instant Unlock"
-          >
-            <Fingerprint className="w-6 h-6" />
-          </button>
+          <div aria-hidden />
+
 
           <button
             type="button"
