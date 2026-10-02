@@ -2,6 +2,7 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import yaawpCss from "../yaawp/index.css?url";
 import { AppProvider } from "@/yaawp/context/AppContext";
 import { TemporaryGamesProvider } from "@/yaawp/context/TemporaryGamesContext";
+import TwoFactorGate from "@/yaawp/components/TwoFactorGate";
 
 // Yaawp relies heavily on browser storage, so its screens render in the browser only.
 export const Route = createFileRoute("/_y")({
@@ -15,10 +16,12 @@ export const Route = createFileRoute("/_y")({
     ],
   }),
   component: () => (
-    <AppProvider>
-      <TemporaryGamesProvider>
-        <Outlet />
-      </TemporaryGamesProvider>
-    </AppProvider>
+    <TwoFactorGate>
+      <AppProvider>
+        <TemporaryGamesProvider>
+          <Outlet />
+        </TemporaryGamesProvider>
+      </AppProvider>
+    </TwoFactorGate>
   ),
 });

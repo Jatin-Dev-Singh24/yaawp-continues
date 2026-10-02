@@ -5015,40 +5015,66 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
-  const setChatPasscode = (pin: string | null) => {
-    if (pin) {
-      const hashed = hashSecret(pin);
-      localStorage.setItem('lumina_chat_passcode', hashed);
-      setChatPasscodeState(hashed);
-      setIsChatLocked(false);
-      addAuditLog('Chat Passcode Configured', '4-digit PIN lock enabled for Direct Messages', 'success');
-      showToast('Chat passcode successfully set!');
-    } else {
-      localStorage.removeItem('lumina_chat_passcode');
+  // Chat PIN lives on the server (hashed). 'server' is just a marker that a PIN exists.
+  const refreshChatLock = async () => {
+    if (!isSupabaseConfigured) return;
+    const { data, error } = await supabase.rpc('chat_lock_status');
+    if (error || !data) return;
+    setChatPasscodeState(data.enabled ? 'server' : null);
+    setIsChatLocked(Boolean(data.enabled));
+    setLockoutUntil(data.locked_until ? new Date(data.locked_until).getTime() : null);
+  };
+  useEffect(() => {
+    localStorage.removeItem('lumina_chat_passcode');
+    localStorage.removeItem('yaawp_pin_failures');
+    if (isAuthenticated) refreshChatLock();
+    else { setChatPasscodeState(null); setIsChatLocked(false); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]);
+
+  const pinErrorMessage = (res: any) => {
+    if (res?.error === 'locked') {
+      const until = res.locked_until ? new Date(res.locked_until).getTime() : Date.now() + 60000;
+      setLockoutUntil(until);
+      return 'Too many wrong PINs. Try again in a minute.';
+    }
+    if (res?.error === 'wrong_pin') return res.attempts_left ? `Incorrect PIN. ${res.attempts_left} tries left.` : 'Incorrect PIN.';
+    if (res?.error === 'not_signed_in') return 'Please sign in first.';
+    if (res?.error === 'invalid_pin') return 'PIN must be 4 digits.';
+    return 'Could not reach the server. Try again.';
+  };
+
+  const setChatPasscode = async (pin: string | null, currentPin?: string): Promise<boolean> => {
+    if (!pin) {
+      if (!currentPin) { showToast('Enter your current PIN to remove the lock.'); return false; }
+      const { data, error } = await supabase.rpc('remove_chat_pin', { _current_pin: currentPin });
+      if (error || !data?.ok) { showToast(pinErrorMessage(error ? null : data)); return false; }
       setChatPasscodeState(null);
       setIsChatLocked(false);
       addAuditLog('Chat Passcode Removed', 'PIN lock disabled', 'warning');
       showToast('Chat passcode removed');
+      return true;
     }
+    const { data, error } = await supabase.rpc('set_chat_pin', { _new_pin: pin, _current_pin: currentPin ?? null });
+    if (error || !data?.ok) { showToast(pinErrorMessage(error ? null : data)); return false; }
+    setChatPasscodeState('server');
+    setIsChatLocked(false);
+    addAuditLog('Chat Passcode Configured', '4-digit PIN lock enabled for Direct Messages', 'success');
+    showToast('Chat passcode saved');
+    return true;
   };
 
-  const unlockChat = (pin: string): boolean => {
-    if (lockoutUntil !== null && Date.now() < lockoutUntil) {
-      showToast('Too many wrong PINs. Try again in a minute.');
-      return false;
-    }
-    if (verifySecret(pin, chatPasscode)) {
-      setFailedLoginAttempts(0);
+  const unlockChat = async (pin: string): Promise<boolean> => {
+    const { data, error } = await supabase.rpc('verify_chat_pin', { _pin: pin });
+    if (!error && data?.ok) {
       setLockoutUntil(null);
-      localStorage.removeItem('yaawp_pin_failures');
       setIsChatLocked(false);
       addAuditLog('Chat Unlocked', 'Valid PIN entered', 'success');
       showToast('Chat unlocked');
       return true;
     }
     addAuditLog('Chat Unlock Failed', 'Incorrect PIN attempt', 'error');
-    recordFailedLogin();
-    showToast('Incorrect passcode');
+    showToast(pinErrorMessage(error ? null : data));
     return false;
   };
 
@@ -5083,8 +5109,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('Failed login counter reset to 0/5. Full attempts restored.');
   };
 
-  const verifyPreviousPasscode = (pin: string): boolean => {
-    return verifySecret(pin, chatPasscode);
+  const verifyPreviousPasscode = async (pin: string): Promise<boolean> => {
+    const { data, error } = await supabase.rpc('verify_chat_pin', { _pin: pin });
+    if (error || !data?.ok) { pinErrorMessage(error ? null : data); return false; }
+    return true;
   };
 
   const setTwoFactorEnabled = (val: boolean) => {
