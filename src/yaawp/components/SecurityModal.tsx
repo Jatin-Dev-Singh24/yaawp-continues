@@ -85,7 +85,7 @@ export const SecurityModal: React.FC = () => {
   if (!isSecurityModalOpen) return null;
 
   // --- Chat Passcode Handlers ---
-  const handleSetNewPasscode = (e: React.FormEvent) => {
+  const handleSetNewPasscode = async (e: React.FormEvent) => {
     e.preventDefault();
     setPinError('');
     if (newPin.length !== 4 || !/^\d{4}$/.test(newPin)) {
