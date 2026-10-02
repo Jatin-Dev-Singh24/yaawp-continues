@@ -96,19 +96,14 @@ export const SecurityModal: React.FC = () => {
       setPinError('PIN codes do not match');
       return;
     }
-    setChatPasscode(newPin);
+    if (!(await setChatPasscode(newPin))) return;
     setNewPin('');
     setConfirmPin('');
-    showToast('Chat Passcode Lock configured successfully');
   };
 
-  const handleUpdatePasscode = (e: React.FormEvent) => {
+  const handleUpdatePasscode = async (e: React.FormEvent) => {
     e.preventDefault();
     setPinError('');
-    if (!verifyPreviousPasscode(previousPin)) {
-      setPinError('Incorrect previous passcode. Verify your PIN or use Forgot Passcode.');
-      return;
-    }
     if (newPin.length !== 4 || !/^\d{4}$/.test(newPin)) {
       setPinError('New passcode must be exactly 4 digits');
       return;
@@ -117,23 +112,23 @@ export const SecurityModal: React.FC = () => {
       setPinError('New PIN codes do not match');
       return;
     }
-    setChatPasscode(newPin);
+    if (!(await setChatPasscode(newPin, previousPin))) {
+      setPinError('Could not update. Check your current PIN.');
+      return;
+    }
     setPreviousPin('');
     setNewPin('');
     setConfirmPin('');
-    showToast('Chat Passcode updated successfully');
   };
 
-  const handleDisablePasscode = (e: React.FormEvent) => {
+  const handleDisablePasscode = async (e: React.FormEvent) => {
     e.preventDefault();
     setPinError('');
-    if (!verifyPreviousPasscode(previousPin)) {
-      setPinError('Incorrect previous passcode. Cannot disable lock without valid PIN.');
+    if (!(await setChatPasscode(null, previousPin))) {
+      setPinError('Could not remove the lock. Check your current PIN.');
       return;
     }
-    setChatPasscode(null);
     setPreviousPin('');
-    showToast('Chat Passcode Lock disabled');
   };
 
   const handleSendPasscodeOtp = () => {
