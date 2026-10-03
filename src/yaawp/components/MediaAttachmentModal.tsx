@@ -44,6 +44,8 @@ export const MediaAttachmentModal: React.FC<MediaAttachmentModalProps> = ({
       setSelectedUrl('');
       setFileName('');
       onClose();
+    } catch (err) {
+      window.alert(err?.message || 'Upload failed.');
     } finally {
       setIsUploading(false);
     }
