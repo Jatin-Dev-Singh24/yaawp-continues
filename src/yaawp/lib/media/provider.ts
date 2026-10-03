@@ -1,147 +1,122 @@
 // @ts-nocheck
-// Media storage provider abstraction for YAAWP.
+// YAAWP media routing (final architecture):
+//   image        -> ImageKit
+//   video / reel -> Gumlet
+// Supabase stores only metadata (media_assets table). There is no S3 layer and
+// no Supabase Storage / data-URL fallback for production media: if a provider
+// is not configured, uploads fail clearly.
 //
-// Architecture (per agreed backend plan):
-//   Upload -> object storage -> processing/optimization (Gumlet) -> CDN -> YAAWP
-//
-// The app code talks only to the MediaProvider interface. The concrete
-// provider is chosen by configuration, so the final object-storage and
-// Gumlet credentials can be supplied later without rewriting app code.
-//
-// Providers:
-//   - 'supabase'  : Supabase Storage bucket (default; works today)
-//   - 's3'        : external S3-compatible object storage (needs credentials)
-//   - 'dataurl'   : offline fallback, stores media as data URLs
-//
-// Required env vars when the external providers are supplied:
-//   VITE_MEDIA_PROVIDER            'supabase' | 's3'  (default 'supabase')
-//   VITE_SUPABASE_MEDIA_BUCKET     bucket name (default 'media')
-//   -- S3-compatible object storage (server-side only, never VITE_) --
-//   S3_ENDPOINT, S3_REGION, S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY
-//   -- Gumlet video processing/CDN (server-side only) --
-//   GUMLET_API_KEY, GUMLET_SOURCE_ID, GUMLET_CDN_BASE_URL
+// Public (browser) config:  VITE_IMAGEKIT_PUBLIC_KEY, VITE_IMAGEKIT_URL_ENDPOINT
+// Server-only secrets:      IMAGEKIT_PRIVATE_KEY, GUMLET_API_KEY, GUMLET_SOURCE_ID
 
-import { supabase, isSupabaseConfigured } from '../supabase';
+import { supabase } from '../supabase';
+import { getImageKitUploadAuth, createGumletUpload, deleteMediaAsset } from '@/lib/media.functions';
 
-export type MediaFolder = 'posts' | 'stories' | 'reels' | 'avatars' | 'audio' | 'messages';
+export type MediaFolder = 'posts' | 'stories' | 'reels' | 'avatars' | 'audio' | 'messages' | 'communities';
 
 export interface MediaUploadResult {
   url: string;
   path?: string;
+  provider?: 'imagekit' | 'gumlet';
+  assetId?: string;
+  thumbnailUrl?: string | null;
   error?: string;
 }
 
-export interface MediaProvider {
-  readonly name: string;
-  upload(file: File | Blob, folder: MediaFolder, customFileName?: string, userId?: string): Promise<MediaUploadResult>;
-  remove(path: string): Promise<boolean>;
+export class MediaUploadError extends Error {}
+
+// Kept for local previews only (never used as stored production media).
+export const fileToDataUrl = (file: File | Blob): Promise<string> =>
+  new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => resolve('');
+    reader.readAsDataURL(file);
+  });
+
+async function accessToken(): Promise<string> {
+  const { data } = await supabase.auth.getSession();
+  const t = data.session?.access_token;
+  if (!t) throw new MediaUploadError('Please sign in to upload media.');
+  return t;
 }
 
-export const fileToDataUrl = (file: File | Blob): Promise<string> => {
-  return new Promise((resolve) => {
-    try {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = () => {
-        const url = URL.createObjectURL(file);
-        const img = new Image();
-        img.onload = () => {
-          URL.revokeObjectURL(url);
-          const canvas = document.createElement('canvas');
-          canvas.width = Math.min(img.naturalWidth || 800, 1200);
-          canvas.height = Math.min(img.naturalHeight || 800, 1200);
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            resolve(canvas.toDataURL('image/webp', 0.8));
-          } else {
-            resolve('');
-          }
-        };
-        img.onerror = () => {
-          URL.revokeObjectURL(url);
-          resolve('');
-        };
-        img.src = url;
-      };
-      reader.readAsDataURL(file);
-    } catch {
-      resolve('');
-    }
+async function recordAsset(row: Record<string, unknown>) {
+  const { data } = await supabase.auth.getUser();
+  if (!data.user) return;
+  const { error } = await supabase.from('media_assets').insert({ ...row, user_id: data.user.id });
+  if (error) console.warn('media_assets insert failed:', error.message);
+}
+
+function friendly(err: any): string {
+  const m = String(err?.message || err);
+  if (m.includes('media_not_configured')) return 'Media uploads are not set up yet.';
+  if (m.includes('unsupported_image_type')) return 'Only JPG, PNG, WebP or GIF images are allowed.';
+  if (m.includes('image_too_large')) return 'Images must be 10 MB or smaller.';
+  if (m.includes('unsupported_video_type')) return 'Only MP4, WebM or MOV videos are allowed.';
+  if (m.includes('video_too_large')) return 'Videos must be 200 MB or smaller.';
+  if (m.includes('unauthorized')) return 'Please sign in to upload media.';
+  return m || 'Upload failed.';
+}
+
+async function uploadImage(file: File | Blob, folder: MediaFolder): Promise<MediaUploadResult> {
+  const publicKey = import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY;
+  if (!publicKey) throw new MediaUploadError('Image uploads are not set up yet.');
+  const token = await accessToken();
+  const auth = await getImageKitUploadAuth({
+    data: { accessToken: token, folder: folder === 'reels' || folder === 'audio' ? 'posts' : folder, mimeType: file.type, size: file.size },
   });
-};
+  const form = new FormData();
+  form.append('file', file);
+  form.append('fileName', file instanceof File ? file.name : `image_${Date.now()}.webp`);
+  form.append('publicKey', publicKey);
+  form.append('signature', auth.signature);
+  form.append('expire', String(auth.expire));
+  form.append('token', auth.token);
+  form.append('folder', auth.folder);
+  form.append('useUniqueFileName', 'true');
+  const res = await fetch('https://upload.imagekit.io/api/v1/files/upload', { method: 'POST', body: form });
+  if (!res.ok) throw new MediaUploadError(`Image upload failed (${res.status}).`);
+  const j = await res.json();
+  await recordAsset({
+    provider: 'imagekit', kind: 'image', folder, provider_asset_id: j.fileId,
+    url: j.url, file_path: j.filePath, mime_type: file.type, size_bytes: file.size,
+    width: j.width ?? null, height: j.height ?? null,
+  });
+  return { url: j.url, path: j.filePath, provider: 'imagekit', assetId: j.fileId };
+}
 
-// ---------------------------------------------------------------------------
-// Supabase Storage adapter (current default)
-// ---------------------------------------------------------------------------
-const supabaseAdapter: MediaProvider = {
-  name: 'supabase',
-  async upload(file, folder, customFileName, userId) {
-    const bucket = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_MEDIA_BUCKET) || 'media';
-    const ext = file instanceof File ? file.name.split('.').pop() || 'jpg' : 'jpg';
-    const cleanFileName = customFileName
-      ? `${customFileName}.${ext}`
-      : `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${ext}`;
-    const userPrefix = userId || 'anonymous';
-    const filePath = `${userPrefix}/${folder}/${cleanFileName}`;
+async function uploadVideo(file: File | Blob, folder: MediaFolder): Promise<MediaUploadResult> {
+  const token = await accessToken();
+  const g = await createGumletUpload({ data: { accessToken: token, mimeType: file.type, size: file.size } });
+  const put = await fetch(g.uploadUrl, { method: 'PUT', body: file, headers: { 'Content-Type': file.type } });
+  if (!put.ok) throw new MediaUploadError(`Video upload failed (${put.status}).`);
+  await recordAsset({
+    provider: 'gumlet', kind: 'video', folder, provider_asset_id: g.assetId,
+    url: g.playbackUrl, thumbnail_url: g.thumbnailUrl, mime_type: file.type, size_bytes: file.size,
+  });
+  return { url: g.playbackUrl || '', provider: 'gumlet', assetId: g.assetId, thumbnailUrl: g.thumbnailUrl };
+}
 
-    const { data, error } = await supabase.storage
-      .from(bucket)
-      .upload(filePath, file, { cacheControl: '3600', upsert: true });
+/** Routes by media type. Throws MediaUploadError with a user-readable message on failure. */
+export async function uploadMedia(file: File | Blob, folder: MediaFolder): Promise<MediaUploadResult> {
+  try {
+    if (file.type.startsWith('image/')) return await uploadImage(file, folder);
+    if (file.type.startsWith('video/')) return await uploadVideo(file, folder);
+    throw new MediaUploadError('Only images and videos can be uploaded.');
+  } catch (err) {
+    throw err instanceof MediaUploadError ? err : new MediaUploadError(friendly(err));
+  }
+}
 
-    if (error) {
-      console.warn('Supabase storage upload notice:', error.message);
-      const dataUrl = await fileToDataUrl(file);
-      return { url: dataUrl, error: error.message };
-    }
-
-    const { data: publicData } = supabase.storage.from(bucket).getPublicUrl(data.path);
-    return { url: publicData.publicUrl, path: data.path };
-  },
-  async remove(path) {
-    const bucket = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_MEDIA_BUCKET) || 'media';
-    const { error } = await supabase.storage.from(bucket).remove([path]);
-    if (error) {
-      console.warn('Supabase storage delete notice:', error.message);
-      return false;
-    }
-    return true;
-  },
-};
-
-// ---------------------------------------------------------------------------
-// External S3-compatible object storage adapter (placeholder).
-// Uploads must go through a server-side signing endpoint so credentials
-// never reach the browser. Activated once S3_* env vars are supplied.
-// ---------------------------------------------------------------------------
-const s3Adapter: MediaProvider = {
-  name: 's3',
-  async upload(file, folder) {
-    // TODO: call the server route that returns a pre-signed PUT URL, then PUT
-    // the file directly to object storage. Not active until credentials exist.
-    console.warn(`S3 media provider not configured yet; falling back to data URL (folder: ${folder}).`);
-    const dataUrl = await fileToDataUrl(file);
-    return { url: dataUrl, error: 's3_provider_not_configured' };
-  },
-  async remove() {
-    console.warn('S3 media provider not configured yet; delete skipped.');
+export async function removeMedia(provider: 'imagekit' | 'gumlet', assetId: string): Promise<boolean> {
+  try {
+    const token = await accessToken();
+    const r = await deleteMediaAsset({ data: { accessToken: token, provider, assetId } });
+    if (r.ok) await supabase.from('media_assets').delete().eq('provider', provider).eq('provider_asset_id', assetId);
+    return r.ok;
+  } catch (err) {
+    console.warn('Media delete failed:', err);
     return false;
-  },
-};
-
-const dataUrlAdapter: MediaProvider = {
-  name: 'dataurl',
-  async upload(file) {
-    return { url: await fileToDataUrl(file) };
-  },
-  async remove() {
-    return true;
-  },
-};
-
-export function getMediaProvider(): MediaProvider {
-  const configured = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_MEDIA_PROVIDER) || 'supabase';
-  if (configured === 's3') return s3Adapter;
-  if (configured === 'supabase' && isSupabaseConfigured) return supabaseAdapter;
-  return dataUrlAdapter;
+  }
 }
