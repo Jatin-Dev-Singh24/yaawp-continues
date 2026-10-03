@@ -1,13 +1,35 @@
 // @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
-// Re-exports the generated Lovable Cloud client so all Yaawp code shares one
-// authenticated Supabase instance (session persistence, preview auth, etc.).
-import { supabase } from '@/integrations/supabase/client';
+// Standalone Supabase client for YAAWP's own Supabase project.
+// Reads public config from VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY.
+// No Lovable Cloud / generated-integration dependency.
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-export { supabase };
+const supabaseUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) || '';
+const supabaseAnonKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) || '';
 
-export const isSupabaseConfigured = true;
+export const isSupabaseConfigured = Boolean(
+  supabaseUrl &&
+  supabaseAnonKey &&
+  supabaseUrl !== 'https://xyzcompany.supabase.co' &&
+  !supabaseUrl.includes('placeholder')
+);
+
+// Fallback dummy URL and anon key to prevent crash if not yet configured
+const safeUrl = isSupabaseConfigured ? supabaseUrl : 'https://placeholder.supabase.co';
+const safeKey = isSupabaseConfigured ? supabaseAnonKey : 'placeholder-anon-key';
+
+export const supabase: SupabaseClient = createClient(safeUrl, safeKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  },
+});
 
 export async function getCurrentSupabaseSession() {
+  if (!isSupabaseConfigured) {
+    return null;
+  }
   try {
     const { data: { session }, error } = await supabase.auth.getSession();
     if (error) {
