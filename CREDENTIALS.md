@@ -1,59 +1,40 @@
-# YAAWP — Required Credentials & Configuration
+# YAAWP — Credentials & Configuration
 
-YAAWP is provider-independent. The app reads all service configuration from
-environment variables; nothing is hard-coded. Supply these when ready.
+Architecture: Supabase (auth, database, RLS, realtime) · ImageKit (all images) · Gumlet (all videos).
+No S3, no Supabase Storage for media, no Lovable Cloud at runtime. Nothing is hard-coded.
 
-## 1. Supabase (auth, database, RLS, realtime) — REQUIRED NOW
+## Public (browser-safe, `VITE_` prefix)
 
-Public (safe to share, used by the browser app):
+| Name | Where to find it |
+| --- | --- |
+| `VITE_SUPABASE_URL` | Supabase → Project Settings → API → Project URL |
+| `VITE_SUPABASE_ANON_KEY` | Supabase → Project Settings → API → anon/public key |
+| `VITE_IMAGEKIT_PUBLIC_KEY` | ImageKit → Developer options → Public key |
+| `VITE_IMAGEKIT_URL_ENDPOINT` | ImageKit → Developer options → URL endpoint (https://ik.imagekit.io/your_id) |
 
-- `VITE_SUPABASE_URL` — your Supabase project URL (https://....supabase.co)
-- `VITE_SUPABASE_ANON_KEY` — your Supabase anon/public key
+## Server-only secrets (secure secrets form, never in chat or code)
 
-Optional:
+| Name | Purpose |
+| --- | --- |
+| `YAAWP_SUPABASE_URL` | Same Project URL, used by the server to verify sessions |
+| `YAAWP_SUPABASE_ANON_KEY` | Same anon key, used server-side for session/ownership checks |
+| `IMAGEKIT_PRIVATE_KEY` | Signs ImageKit uploads + deletes. Never sent to the browser |
+| `GUMLET_API_KEY` | Creates/deletes Gumlet video assets |
+| `GUMLET_SOURCE_ID` | Gumlet → Video → your Video Source (collection) ID |
 
-- `VITE_SUPABASE_MEDIA_BUCKET` — storage bucket name for media (default: `media`)
+Gumlet playback/thumbnail URLs come back from the Gumlet API per asset, so no separate CDN URL is needed.
+The Supabase service-role key is NOT needed.
 
-Database setup to apply to your Supabase project (SQL is ready in this repo):
+## Database (apply to your Supabase, in order, after review)
 
-- `supabase/migrations/20260908000000_enable_rls.sql` — tables (profiles, posts,
-  custom_circles, circle_members, saved_posts, hidden_profiles), access grants,
-  row-level-security policies, and auto-profile-creation on signup.
-- `db/pending/20261001_server_chat_lock.sql` — server-side chat PIN lock
-  (bcrypt-hashed PINs, server-enforced 5-attempt / 60-second lockout).
+1. `db/pending/20261003_yaawp_core_rls.sql` — tables, grants, corrected social RLS, media_assets.
+2. `db/pending/20261001_server_chat_lock.sql` — server-side chat PIN lock.
 
-Also enable in your Supabase project:
+`db/superseded/20260908000000_enable_rls.sql` is the old version — do not apply.
 
-- Email/password sign-in (Authentication → Providers → Email)
-- TOTP MFA (Authentication → Multi-Factor) — powers the real 2FA already built
-- A `media` storage bucket (public) if you keep Supabase Storage for now
+## Supabase settings
+- Email/password sign-in on; TOTP MFA on.
 
-## 2. External object storage (S3-compatible) — LATER
-
-Server-side only, never exposed to the browser:
-
-- `S3_ENDPOINT`
-- `S3_REGION`
-- `S3_BUCKET`
-- `S3_ACCESS_KEY_ID`
-- `S3_SECRET_ACCESS_KEY`
-
-Plus `VITE_MEDIA_PROVIDER=s3` to switch the app over. Uploads will go through
-a server-side pre-signed-URL endpoint so keys never reach the client.
-
-## 3. Gumlet (video processing / CDN for Reels) — LATER
-
-Server-side only:
-
-- `GUMLET_API_KEY`
-- `GUMLET_SOURCE_ID`
-- `GUMLET_CDN_BASE_URL`
-
-## Notes
-
-- Do not paste secret keys in chat. Public values (Supabase URL, anon key) are
-  fine in chat; secret keys go through the secure secrets form.
-- Lovable Cloud was enabled on this project before your instruction arrived.
-  Removing it entirely requires a workspace admin: Cloud Tab → Advanced →
-  Disconnect (irreversible, deletes cloud data). The app code itself no longer
-  depends on it — it uses only the env vars above.
+## Recommended provider settings
+- ImageKit: restrict uploads to images, max 10 MB (Settings → Upload restrictions).
+- Gumlet: keep the source private to your API key.
