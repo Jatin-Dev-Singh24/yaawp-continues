@@ -4,6 +4,7 @@ import { TemporaryGamesProvider } from "@/yaawp/context/TemporaryGamesContext";
 import { LegalStandalonePage } from "@/yaawp/pages";
 
 export const Route = createFileRoute("/_y/legal")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Legal — YAAWP" },
