@@ -16,10 +16,6 @@ function YaawpLoadingScreen() {
 }
 
 export const Route = createFileRoute("/_y")({
-  ssr: false,
-  pendingComponent: YaawpLoadingScreen,
-  pendingMs: 0,
-  pendingMinMs: 300,
   head: () => ({
     links: [
       { rel: "stylesheet", href: yaawpCss },
