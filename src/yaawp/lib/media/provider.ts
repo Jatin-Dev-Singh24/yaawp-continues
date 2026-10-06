@@ -59,8 +59,12 @@ function friendly(err: any): string {
   return m || 'Upload failed.';
 }
 
+// ImageKit public config (safe to ship in the browser).
+const IMAGEKIT_PUBLIC_KEY = 'public_ldiqf6sLzvqOa5OIm4ZvzYIXTk4=';
+const IMAGEKIT_URL_ENDPOINT = 'https://ik.imagekit.io/3xvr9skjdp';
+
 async function uploadImage(file: File | Blob, folder: MediaFolder): Promise<MediaUploadResult> {
-  const publicKey = import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY;
+  const publicKey = import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY || IMAGEKIT_PUBLIC_KEY;
   if (!publicKey) throw new MediaUploadError('Image uploads are not set up yet.');
   const token = await accessToken();
   const auth = await getImageKitUploadAuth({
