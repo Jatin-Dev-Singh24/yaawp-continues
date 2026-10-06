@@ -2,14 +2,17 @@
 import React from 'react';
 import { Link, useNavigate } from '@/yaawp/compat/router';
 import { HelpCircle, ArrowDown } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 import { FAQSection } from './FAQSection';
 import { LegalDocType } from '../../types';
 import { PWAInstallButton } from '../pwa/PWAInstallButton';
 
 export const AppPreviewPage: React.FC = () => {
+  const { setActiveLegalDoc } = useApp();
   const navigate = useNavigate();
 
   const navigateToLegalDoc = (doc: LegalDocType) => {
+    setActiveLegalDoc(doc);
     navigate(`/legal?doc=${doc}`);
   };
 
