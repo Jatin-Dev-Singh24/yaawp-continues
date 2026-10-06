@@ -133,6 +133,7 @@ export const ProfileSettingsModal: React.FC = () => {
 
   // Random/unlisted user text input for custom audience
   const [unlistedUsernameInput, setUnlistedUsernameInput] = useState('');
+  const profilePfpFileInputRef = useRef<HTMLInputElement>(null);
 
   if (!isProfileMenuOpen) return null;
 
@@ -190,8 +191,6 @@ export const ProfileSettingsModal: React.FC = () => {
       customUsernames: (prev.customUsernames || []).filter(u => u !== username)
     }));
   };
-
-  const profilePfpFileInputRef = useRef<HTMLInputElement>(null);
 
   const handleProfilePfpFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

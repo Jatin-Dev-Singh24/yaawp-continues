@@ -12,4 +12,8 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  server: {
+    host: "0.0.0.0",
+    port: 3000,
+  },
 });

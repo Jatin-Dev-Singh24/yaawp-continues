@@ -1563,14 +1563,12 @@ export const MessagesView: React.FC = () => {
                             )}
 
                             {/* Voice Note Bubble */}
-                            {Boolean(
-                              msg.documentData ||
+                            {(msg.documentData ||
                               msg.audioData ||
                               msg.contactData ||
                               msg.locationData ||
                               msg.pollData ||
-                              msg.gameSession
-                            ) ? (
+                              msg.gameSession) ? (
                               <div className="space-y-1.5 min-w-[240px] max-w-[320px]">
                                 <ChatMessageAttachment
                                   message={msg}

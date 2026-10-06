@@ -1,0 +1,8 @@
+{
+  "name": "YAAWP",
+  "description": "Pure social expression. Real moments, genuine connections.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

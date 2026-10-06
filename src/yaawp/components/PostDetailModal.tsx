@@ -102,6 +102,19 @@ export const PostDetailModal: React.FC = () => {
     confirmLabel: 'Confirm'
   });
 
+  // Calculate total reactions count
+  const totalReactionsCount = useMemo(() => {
+    if (!selectedPostForModal) return 0;
+    if (!selectedPostForModal.reactions || Object.keys(selectedPostForModal.reactions).length === 0) {
+      return selectedPostForModal.likesCount || 0;
+    }
+    let count = 0;
+    Object.values(selectedPostForModal.reactions).forEach(uids => {
+      count += Array.isArray(uids) ? uids.length : 1;
+    });
+    return Math.max(selectedPostForModal.likesCount || 0, count);
+  }, [selectedPostForModal?.reactions, selectedPostForModal?.likesCount]);
+
   if (!selectedPostForModal) return null;
   const post = selectedPostForModal;
   const isOwnPost =
@@ -132,18 +145,6 @@ export const PostDetailModal: React.FC = () => {
     ? (post.quotePost.mediaUrl || (post.quotePost.mediaUrls && post.quotePost.mediaUrls[0]) || '')
     : '';
   const originalPostId = post.quotePost?.id || post.originalPostId;
-
-  // Calculate total reactions count
-  const totalReactionsCount = useMemo(() => {
-    if (!post.reactions || Object.keys(post.reactions).length === 0) {
-      return post.likesCount || 0;
-    }
-    let count = 0;
-    Object.values(post.reactions).forEach(uids => {
-      count += Array.isArray(uids) ? uids.length : 1;
-    });
-    return Math.max(post.likesCount || 0, count);
-  }, [post.reactions, post.likesCount]);
 
   const handleQuoteSubmit = (e: React.FormEvent) => {
     e.preventDefault();
