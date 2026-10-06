@@ -40,7 +40,6 @@ function YaawpLoadingScreen() {
 
 export const Route = createFileRoute("/_y")({
   ssr: false,
-  component: () => <YaawpRouteErrorBoundary><Outlet /></YaawpRouteErrorBoundary>,
   head: () => ({
     links: [
       { rel: "stylesheet", href: yaawpCss },
@@ -48,5 +47,5 @@ export const Route = createFileRoute("/_y")({
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=MonteCarlo&display=swap" },
     ],
   }),
-  component: () => <Outlet />,
+  component: () => <YaawpRouteErrorBoundary><Outlet /></YaawpRouteErrorBoundary>,
 });
