@@ -77,7 +77,14 @@ export const AppLayout: React.FC = () => {
   }, [activeTab]);
 
   if (!isAuthenticated && location.pathname !== '/app/legal') {
-    return null;
+    return (
+      <div className="min-h-screen w-full bg-[#09090b] text-[#f4f4f5] flex items-center justify-center">
+        <div className="text-center">
+          <div className="font-monte-carlo text-6xl">YAAWP</div>
+          <p className="mt-3 text-xs uppercase tracking-[0.18em] text-zinc-500">Checking your session…</p>
+        </div>
+      </div>
+    );
   }
 
   return (
