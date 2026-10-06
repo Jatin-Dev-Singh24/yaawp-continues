@@ -3582,8 +3582,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // Private community check
     if (targetComm.isPrivate) {
-      const validCodes = [targetComm.inviteCode, `${targetComm.slug}-invite`, 'VIP_INVITE', 'COMMUNITY_PASS'];
-      const hasValidCode = inviteCode && validCodes.includes(inviteCode.trim());
+      const hasValidCode = Boolean(
+        inviteCode && targetComm.inviteCode && inviteCode.trim() === targetComm.inviteCode
+      );
 
       if (!hasValidCode) {
         // Check if already requested
@@ -3663,7 +3664,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       avatar: data.avatar || '',
       bannerUrl: data.bannerUrl || '',
       isPrivate: Boolean(data.isPrivate),
-      inviteCode: `${generatedSlug}-invite`,
+      inviteCode: generateInviteCode(),
       ownerId: currentUser.id,
       ownerName: currentUser.name,
       moderators: [currentUser.id],
