@@ -4,6 +4,7 @@ import { TemporaryGamesProvider } from "@/yaawp/context/TemporaryGamesContext";
 import { AppLayout } from "@/yaawp/pages";
 
 export const Route = createFileRoute("/_y/app")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "YAAWP" },
