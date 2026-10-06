@@ -352,7 +352,7 @@ export const CommunitiesView: React.FC = () => {
                 required
                 value={enteredInviteCode}
                 onChange={e => setEnteredInviteCode(e.target.value)}
-                placeholder="e.g. collective-invite or VIP_INVITE"
+                placeholder="Paste the invite code you received"
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-lime-500"
               />
 

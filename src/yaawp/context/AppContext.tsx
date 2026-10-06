@@ -1,5 +1,12 @@
 // @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import { hashSecret, verifySecret } from '../lib/secureHash';
+
+// Cryptographically random invite code for private communities (not derivable from the slug).
+const generateInviteCode = (): string => {
+  const bytes = new Uint8Array(12);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+};
 import React, { createContext, useContext, useState, useEffect, useMemo, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import type { Session } from '@supabase/supabase-js';
@@ -3582,8 +3589,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // Private community check
     if (targetComm.isPrivate) {
-      const validCodes = [targetComm.inviteCode, `${targetComm.slug}-invite`, 'VIP_INVITE', 'COMMUNITY_PASS'];
-      const hasValidCode = inviteCode && validCodes.includes(inviteCode.trim());
+      const hasValidCode = Boolean(
+        inviteCode && targetComm.inviteCode && inviteCode.trim() === targetComm.inviteCode
+      );
 
       if (!hasValidCode) {
         // Check if already requested
@@ -3663,7 +3671,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       avatar: data.avatar || '',
       bannerUrl: data.bannerUrl || '',
       isPrivate: Boolean(data.isPrivate),
-      inviteCode: `${generatedSlug}-invite`,
+      inviteCode: generateInviteCode(),
       ownerId: currentUser.id,
       ownerName: currentUser.name,
       moderators: [currentUser.id],
