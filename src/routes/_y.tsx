@@ -1,5 +1,28 @@
+import React from "react";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import yaawpCss from "../yaawp/index.css?url";
+
+class YaawpRouteErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: Error | null }> {
+  state = { error: null as Error | null };
+  static getDerivedStateFromError(error: Error) { return { error }; }
+  componentDidCatch(error: Error) { console.error("YAAWP route error:", error); }
+  render() {
+    if (!this.state.error) return this.props.children;
+    return (
+      <div className="min-h-screen w-full bg-[#09090b] text-[#f4f4f5] flex items-center justify-center px-6 text-center">
+        <div className="max-w-md">
+          <div className="font-monte-carlo text-7xl mb-5">YAAWP</div>
+          <h1 className="text-lg tracking-wide">This page could not load</h1>
+          <p className="mt-2 text-sm text-zinc-500">Please try again or return to the YAAWP home page.</p>
+          <div className="mt-6 flex justify-center gap-3">
+            <button type="button" onClick={() => window.location.reload()} className="rounded-full bg-zinc-100 px-5 py-2.5 text-xs font-medium uppercase tracking-wider text-zinc-950">Try again</button>
+            <a href="/" className="rounded-full border border-zinc-700 px-5 py-2.5 text-xs uppercase tracking-wider text-zinc-200">Home</a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
 
 function YaawpLoadingScreen() {
   return (
@@ -16,6 +39,8 @@ function YaawpLoadingScreen() {
 }
 
 export const Route = createFileRoute("/_y")({
+  ssr: false,
+  component: () => <YaawpRouteErrorBoundary><Outlet /></YaawpRouteErrorBoundary>,
   head: () => ({
     links: [
       { rel: "stylesheet", href: yaawpCss },
