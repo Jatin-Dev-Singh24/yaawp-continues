@@ -4,6 +4,7 @@ import { TemporaryGamesProvider } from "@/yaawp/context/TemporaryGamesContext";
 import { LoginPage } from "@/yaawp/pages";
 
 export const Route = createFileRoute("/_y/auth/login")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Log in — YAAWP" },
