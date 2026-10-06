@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AppProvider } from "@/yaawp/context/AppContext";
+import { TemporaryGamesProvider } from "@/yaawp/context/TemporaryGamesContext";
 import { SignupPage } from "@/yaawp/pages";
 
 export const Route = createFileRoute("/_y/auth/signup")({
@@ -10,5 +12,11 @@ export const Route = createFileRoute("/_y/auth/signup")({
       { property: "og:description", content: "Create your YAAWP account." },
     ],
   }),
-  component: SignupPage,
+  component: () => (
+    <AppProvider>
+      <TemporaryGamesProvider>
+        <SignupPage />
+      </TemporaryGamesProvider>
+    </AppProvider>
+  ),
 });
