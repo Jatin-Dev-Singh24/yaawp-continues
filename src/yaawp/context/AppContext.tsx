@@ -1,5 +1,12 @@
 // @ts-nocheck -- legacy Yaawp code ported from strict-off Vite app; type cleanup pending
 import { hashSecret, verifySecret } from '../lib/secureHash';
+
+// Cryptographically random invite code for private communities (not derivable from the slug).
+const generateInviteCode = (): string => {
+  const bytes = new Uint8Array(12);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+};
 import React, { createContext, useContext, useState, useEffect, useMemo, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import type { Session } from '@supabase/supabase-js';
