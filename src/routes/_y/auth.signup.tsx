@@ -1,16 +1,16 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { AppProvider } from "@/yaawp/context/AppContext";
-import { TemporaryGamesProvider } from "@/yaawp/context/TemporaryGamesContext";
-import { SignupPage } from "@/yaawp/pages";
+import { createFileRoute } from '@tanstack/react-router';
+import { AppProvider } from '@/yaawp/context/AppContext';
+import { TemporaryGamesProvider } from '@/yaawp/context/TemporaryGamesContext';
+import { SignupPage } from '@/yaawp/pages';
 
-export const Route = createFileRoute("/_y/auth/signup")({
+export const Route = createFileRoute('/legacy/auth/signup')({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Sign up — YAAWP" },
-      { name: "description", content: "Create your YAAWP account." },
-      { property: "og:title", content: "Sign up — YAAWP" },
-      { property: "og:description", content: "Create your YAAWP account." },
+      { title: 'Sign up — YAAWP' },
+      { name: 'description', content: 'Create your YAAWP account.' },
+      { property: 'og:title', content: 'Sign up — YAAWP' },
+      { property: 'og:description', content: 'Create your YAAWP account.' },
     ],
   }),
   component: () => (
