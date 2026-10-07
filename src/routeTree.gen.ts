@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as YRouteImport } from './routes/_y'
-import { Route as YIndexRouteImport } from './routes/_y/index'
+import { Route as CallbackRouteImport } from './routes/callback'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as YAppRouteImport } from './routes/_y/app'
 import { Route as YLegalRouteImport } from './routes/_y/legal'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as AuthLoginRouteImport } from './routes/auth.login'
+import { Route as AuthSignupRouteImport } from './routes/auth.signup'
 import { Route as YAppChatsRouteImport } from './routes/_y/app.chats'
 import { Route as YAppCommunitiesRouteImport } from './routes/_y/app.communities'
 import { Route as YAppExploreRouteImport } from './routes/_y/app.explore'
@@ -22,17 +28,30 @@ import { Route as YAppNotificationsRouteImport } from './routes/_y/app.notificat
 import { Route as YAppProfileRouteImport } from './routes/_y/app.profile'
 import { Route as YAppReelsRouteImport } from './routes/_y/app.reels'
 import { Route as YAppSettingsRouteImport } from './routes/_y/app.settings'
-import { Route as YAuthLoginRouteImport } from './routes/_y/auth.login'
-import { Route as YAuthSignupRouteImport } from './routes/_y/auth.signup'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const YRoute = YRouteImport.update({
   id: '/_y',
   getParentRoute: () => rootRouteImport,
 } as any)
-const YIndexRoute = YIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => YRoute,
+const CallbackRoute = CallbackRouteImport.update({
+  id: '/callback',
+  path: '/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const YAppRoute = YAppRouteImport.update({
   id: '/app',
@@ -43,6 +62,21 @@ const YLegalRoute = YLegalRouteImport.update({
   id: '/legal',
   path: '/legal',
   getParentRoute: () => YRoute,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/auth/login',
+  path: '/auth/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthSignupRoute = AuthSignupRouteImport.update({
+  id: '/auth/signup',
+  path: '/auth/signup',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const YAppChatsRoute = YAppChatsRouteImport.update({
   id: '/chats',
@@ -89,21 +123,17 @@ const YAppSettingsRoute = YAppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => YAppRoute,
 } as any)
-const YAuthLoginRoute = YAuthLoginRouteImport.update({
-  id: '/auth/login',
-  path: '/auth/login',
-  getParentRoute: () => YRoute,
-} as any)
-const YAuthSignupRoute = YAuthSignupRouteImport.update({
-  id: '/auth/signup',
-  path: '/auth/signup',
-  getParentRoute: () => YRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof YIndexRoute
+  '/': typeof IndexRoute
+  '/callback': typeof CallbackRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/app': typeof YAppRouteWithChildren
   '/legal': typeof YLegalRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/signup': typeof AuthSignupRoute
   '/app/chats': typeof YAppChatsRoute
   '/app/communities': typeof YAppCommunitiesRoute
   '/app/explore': typeof YAppExploreRoute
@@ -113,13 +143,17 @@ export interface FileRoutesByFullPath {
   '/app/profile': typeof YAppProfileRoute
   '/app/reels': typeof YAppReelsRoute
   '/app/settings': typeof YAppSettingsRoute
-  '/auth/login': typeof YAuthLoginRoute
-  '/auth/signup': typeof YAuthSignupRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/callback': typeof CallbackRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/app': typeof YAppRouteWithChildren
   '/legal': typeof YLegalRoute
-  '/': typeof YIndexRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/signup': typeof AuthSignupRoute
   '/app/chats': typeof YAppChatsRoute
   '/app/communities': typeof YAppCommunitiesRoute
   '/app/explore': typeof YAppExploreRoute
@@ -129,15 +163,19 @@ export interface FileRoutesByTo {
   '/app/profile': typeof YAppProfileRoute
   '/app/reels': typeof YAppReelsRoute
   '/app/settings': typeof YAppSettingsRoute
-  '/auth/login': typeof YAuthLoginRoute
-  '/auth/signup': typeof YAuthSignupRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/_y': typeof YRouteWithChildren
+  '/callback': typeof CallbackRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/_y/app': typeof YAppRouteWithChildren
   '/_y/legal': typeof YLegalRoute
-  '/_y/': typeof YIndexRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/signup': typeof AuthSignupRoute
   '/_y/app/chats': typeof YAppChatsRoute
   '/_y/app/communities': typeof YAppCommunitiesRoute
   '/_y/app/explore': typeof YAppExploreRoute
@@ -147,15 +185,19 @@ export interface FileRoutesById {
   '/_y/app/profile': typeof YAppProfileRoute
   '/_y/app/reels': typeof YAppReelsRoute
   '/_y/app/settings': typeof YAppSettingsRoute
-  '/_y/auth/login': typeof YAuthLoginRoute
-  '/_y/auth/signup': typeof YAuthSignupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/callback'
+    | '/login'
+    | '/signup'
     | '/app'
     | '/legal'
+    | '/auth/callback'
+    | '/auth/login'
+    | '/auth/signup'
     | '/app/chats'
     | '/app/communities'
     | '/app/explore'
@@ -165,13 +207,17 @@ export interface FileRouteTypes {
     | '/app/profile'
     | '/app/reels'
     | '/app/settings'
-    | '/auth/login'
-    | '/auth/signup'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
+    | '/callback'
+    | '/login'
+    | '/signup'
     | '/app'
     | '/legal'
-    | '/'
+    | '/auth/callback'
+    | '/auth/login'
+    | '/auth/signup'
     | '/app/chats'
     | '/app/communities'
     | '/app/explore'
@@ -181,14 +227,18 @@ export interface FileRouteTypes {
     | '/app/profile'
     | '/app/reels'
     | '/app/settings'
-    | '/auth/login'
-    | '/auth/signup'
   id:
     | '__root__'
+    | '/'
     | '/_y'
+    | '/callback'
+    | '/login'
+    | '/signup'
     | '/_y/app'
     | '/_y/legal'
-    | '/_y/'
+    | '/auth/callback'
+    | '/auth/login'
+    | '/auth/signup'
     | '/_y/app/chats'
     | '/_y/app/communities'
     | '/_y/app/explore'
@@ -198,16 +248,28 @@ export interface FileRouteTypes {
     | '/_y/app/profile'
     | '/_y/app/reels'
     | '/_y/app/settings'
-    | '/_y/auth/login'
-    | '/_y/auth/signup'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   YRoute: typeof YRouteWithChildren
+  CallbackRoute: typeof CallbackRoute
+  LoginRoute: typeof LoginRoute
+  SignupRoute: typeof SignupRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthSignupRoute: typeof AuthSignupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_y': {
       id: '/_y'
       path: ''
@@ -215,12 +277,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof YRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_y/': {
-      id: '/_y/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof YIndexRouteImport
-      parentRoute: typeof YRoute
+    '/callback': {
+      id: '/callback'
+      path: '/callback'
+      fullPath: '/callback'
+      preLoaderRoute: typeof CallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_y/app': {
       id: '/_y/app'
@@ -235,6 +311,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/legal'
       preLoaderRoute: typeof YLegalRouteImport
       parentRoute: typeof YRoute
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/login': {
+      id: '/auth/login'
+      path: '/auth/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/signup': {
+      id: '/auth/signup'
+      path: '/auth/signup'
+      fullPath: '/auth/signup'
+      preLoaderRoute: typeof AuthSignupRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_y/app/chats': {
       id: '/_y/app/chats'
@@ -299,20 +396,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof YAppSettingsRouteImport
       parentRoute: typeof YAppRoute
     }
-    '/_y/auth/login': {
-      id: '/_y/auth/login'
-      path: '/auth/login'
-      fullPath: '/auth/login'
-      preLoaderRoute: typeof YAuthLoginRouteImport
-      parentRoute: typeof YRoute
-    }
-    '/_y/auth/signup': {
-      id: '/_y/auth/signup'
-      path: '/auth/signup'
-      fullPath: '/auth/signup'
-      preLoaderRoute: typeof YAuthSignupRouteImport
-      parentRoute: typeof YRoute
-    }
   }
 }
 
@@ -345,34 +428,25 @@ const YAppRouteWithChildren = YAppRoute._addFileChildren(YAppRouteChildren)
 interface YRouteChildren {
   YAppRoute: typeof YAppRouteWithChildren
   YLegalRoute: typeof YLegalRoute
-  YIndexRoute: typeof YIndexRoute
-  YAuthLoginRoute: typeof YAuthLoginRoute
-  YAuthSignupRoute: typeof YAuthSignupRoute
 }
 
 const YRouteChildren: YRouteChildren = {
   YAppRoute: YAppRouteWithChildren,
   YLegalRoute: YLegalRoute,
-  YIndexRoute: YIndexRoute,
-  YAuthLoginRoute: YAuthLoginRoute,
-  YAuthSignupRoute: YAuthSignupRoute,
 }
 
 const YRouteWithChildren = YRoute._addFileChildren(YRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   YRoute: YRouteWithChildren,
+  CallbackRoute: CallbackRoute,
+  LoginRoute: LoginRoute,
+  SignupRoute: SignupRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
+  AuthLoginRoute: AuthLoginRoute,
+  AuthSignupRoute: AuthSignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

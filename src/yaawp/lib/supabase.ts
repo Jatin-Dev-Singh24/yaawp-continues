@@ -9,8 +9,8 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 const YAAWP_SUPABASE_URL = 'https://yphdzqflcjdvkjtlbecl.supabase.co';
 const YAAWP_SUPABASE_ANON_KEY = 'sb_publishable_vVEew5g5lf-803gk54MfgQ_d9rEdboN';
 
-const supabaseUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) || YAAWP_SUPABASE_URL;
-const supabaseAnonKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) || YAAWP_SUPABASE_ANON_KEY;
+export const supabaseUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) || YAAWP_SUPABASE_URL;
+export const supabaseAnonKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) || YAAWP_SUPABASE_ANON_KEY;
 
 export const isSupabaseConfigured = Boolean(
   supabaseUrl &&

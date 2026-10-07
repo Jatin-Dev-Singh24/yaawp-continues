@@ -10,7 +10,7 @@ const generateInviteCode = (): string => {
 import React, { createContext, useContext, useState, useEffect, useMemo, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import type { Session } from '@supabase/supabase-js';
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { supabase, isSupabaseConfigured, supabaseUrl } from '../lib/supabase';
 import {
   UserProfile,
   UserSummary,
@@ -3380,10 +3380,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     let supabaseUserId: string | null = null;
     if (isSupabaseConfigured && data.contact.includes('@') && data.password) {
       try {
+        const callbackUrl = typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : undefined;
         const { data: authData, error: authError } = await supabase.auth.signUp({
           email: data.contact.trim(),
           password: data.password.trim(),
           options: {
+            emailRedirectTo: callbackUrl,
             captchaToken: data.captchaToken,
             data: {
               username: cleanUsername,
@@ -3437,7 +3439,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem(`${LOCAL_STORAGE_KEY}_user`, JSON.stringify(newProfile));
     localStorage.setItem('yaawp_terms_agreed_v1', 'true');
     localStorage.setItem('yaawp_terms_agreed_time', String(Date.now()));
-    setIsAuthenticated(Boolean(supabaseSession));
+    setIsAuthenticated(true);
     if (data.preferred_language) {
       setPreferredLanguage(data.preferred_language);
     }
@@ -3523,6 +3525,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
     setCurrentUser(fullProfile);
     setViewedUserId(fullProfile.id);
+    setIsAuthenticated(true);
     localStorage.setItem(`${LOCAL_STORAGE_KEY}_user`, JSON.stringify(fullProfile));
     showToast(`Switched account to @${fullProfile.username}`);
   };
@@ -5371,11 +5374,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const loginWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
     if (isSupabaseConfigured) {
+      const isDefaultSupabase = typeof supabaseUrl === 'string' && supabaseUrl.includes('yphdzqflcjdvkjtlbecl');
+      const isCloudRun = typeof window !== 'undefined' && (window.location.hostname.endsWith('.run.app') || window.location.hostname.includes('ais-'));
+      if (isDefaultSupabase && isCloudRun) {
+        return {
+          success: false,
+          error: 'Google Sign-In is only active with custom OAuth credentials. Please log in or sign up using your Username/Email and Password below.'
+        };
+      }
       try {
+        const callbackUrl = typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : undefined;
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
           options: {
-            redirectTo: window.location.origin
+            redirectTo: callbackUrl
           }
         });
         if (error) {
@@ -6147,6 +6159,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         toggleHideMyProfileFrom,
         isProfileHiddenFromUser,
         // Supabase Auth & Session
+        isAuthReady,
         supabaseSession,
         isSupabaseConfigured,
         loginWithSupabase,

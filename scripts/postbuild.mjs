@@ -11,6 +11,21 @@ async function main() {
     fs.cpSync(publicDir, distDir, { recursive: true });
   }
 
+  // Ensure production manifest with real asset URLs replaces any dummy dev manifest
+  const serverDir = path.resolve(".output/server");
+  if (fs.existsSync(serverDir)) {
+    const files = fs.readdirSync(serverDir);
+    const realManifest = files.find(
+      (f) => f.startsWith("_tanstack-start-manifest_v-") && f.endsWith(".mjs"),
+    );
+    if (realManifest) {
+      const srcPath = path.join(serverDir, realManifest);
+      const destPath = path.join(serverDir, "_tanstack-start-manifest_v.mjs");
+      fs.copyFileSync(srcPath, destPath);
+      console.log(`Replaced dummy manifest with production manifest: ${realManifest}`);
+    }
+  }
+
   // Try to generate dist/index.html using the local dev/test server or nitro
   const port = process.env.PORT || 3000;
   const req = http.get(`http://localhost:${port}/`, (res) => {

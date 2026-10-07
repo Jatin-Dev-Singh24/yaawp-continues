@@ -43,17 +43,17 @@ const tabToPath: Record<string, string> = {
 };
 
 export const AppLayout: React.FC = () => {
-  const { activeTab, setActiveTab, isAuthenticated } = useApp();
+  const { activeTab, setActiveTab, isAuthenticated, isAuthReady } = useApp();
   const location = useLocation();
   const navigate = useNavigate();
   const isInternalSync = useRef(false);
 
   // Strict route protection: unauthenticated users cannot access /app/* (only public /app/legal)
   useEffect(() => {
-    if (!isAuthenticated && location.pathname !== '/app/legal') {
+    if (isAuthReady && !isAuthenticated && location.pathname !== '/app/legal') {
       navigate('/', { replace: true });
     }
-  }, [isAuthenticated, location.pathname, navigate]);
+  }, [isAuthReady, isAuthenticated, location.pathname, navigate]);
 
   // When location changes, update activeTab
   useEffect(() => {
@@ -76,7 +76,7 @@ export const AppLayout: React.FC = () => {
     }
   }, [activeTab]);
 
-  if (!isAuthenticated && location.pathname !== '/app/legal') {
+  if ((!isAuthReady || !isAuthenticated) && location.pathname !== '/app/legal') {
     return null;
   }
 
