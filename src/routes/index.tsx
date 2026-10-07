@@ -12,6 +12,10 @@ export const Route = createFileRoute('/')({
       { property: 'og:title', content: 'YAAWP — Pure social expression' },
       { property: 'og:description', content: 'Real moments, genuine connections. Join YAAWP.' },
     ],
+    links: [
+      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=MonteCarlo&display=swap' },
+    ],
   }),
   component: () => (
     <AppProvider>
