@@ -14,8 +14,6 @@ import { Route as CallbackRouteImport } from './routes/callback'
 import { Route as YAppRouteImport } from './routes/_y/app'
 import { Route as YLegalRouteImport } from './routes/_y/legal'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
-import { Route as AuthLoginRouteImport } from './routes/auth.login'
-import { Route as AuthSignupRouteImport } from './routes/auth.signup'
 import { Route as YAppChatsRouteImport } from './routes/_y/app.chats'
 import { Route as YAppCommunitiesRouteImport } from './routes/_y/app.communities'
 import { Route as YAppExploreRouteImport } from './routes/_y/app.explore'
@@ -48,16 +46,6 @@ const YLegalRoute = YLegalRouteImport.update({
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
   path: '/auth/callback',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/auth/login',
-  path: '/auth/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthSignupRoute = AuthSignupRouteImport.update({
-  id: '/auth/signup',
-  path: '/auth/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const YAppChatsRoute = YAppChatsRouteImport.update({
@@ -111,8 +99,6 @@ export interface FileRoutesByFullPath {
   '/app': typeof YAppRouteWithChildren
   '/legal': typeof YLegalRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/auth/login': typeof AuthLoginRoute
-  '/auth/signup': typeof AuthSignupRoute
   '/app/chats': typeof YAppChatsRoute
   '/app/communities': typeof YAppCommunitiesRoute
   '/app/explore': typeof YAppExploreRoute
@@ -224,8 +210,6 @@ export interface RootRouteChildren {
   YRoute: typeof YRouteWithChildren
   CallbackRoute: typeof CallbackRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
-  AuthLoginRoute: typeof AuthLoginRoute
-  AuthSignupRoute: typeof AuthSignupRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -263,20 +247,6 @@ declare module '@tanstack/react-router' {
       path: '/auth/callback'
       fullPath: '/auth/callback'
       preLoaderRoute: typeof AuthCallbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/login': {
-      id: '/auth/login'
-      path: '/auth/login'
-      fullPath: '/auth/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/signup': {
-      id: '/auth/signup'
-      path: '/auth/signup'
-      fullPath: '/auth/signup'
-      preLoaderRoute: typeof AuthSignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_y/app/chats': {
@@ -387,8 +357,6 @@ const rootRouteChildren: RootRouteChildren = {
   YRoute: YRouteWithChildren,
   CallbackRoute: CallbackRoute,
   AuthCallbackRoute: AuthCallbackRoute,
-  AuthLoginRoute: AuthLoginRoute,
-  AuthSignupRoute: AuthSignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
