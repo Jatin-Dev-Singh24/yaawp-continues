@@ -5,9 +5,9 @@ export const Route = createFileRoute("/_y/app/profile")({
   head: () => ({
     meta: [
       { title: "Profile — YAAWP" },
-      { name: "description", content: "YAAWP Profile." },
+      { name: "description", content: "View and edit your YAAWP profile, posts, followers and personal details." },
       { property: "og:title", content: "Profile — YAAWP" },
-      { property: "og:description", content: "YAAWP Profile." },
+      { property: "og:description", content: "View and edit your YAAWP profile, posts, followers and personal details." },
     ],
   }),
   component: ProfilePage,

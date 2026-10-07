@@ -7,9 +7,9 @@ export const Route = createFileRoute("/_y/app")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "YAAWP" },
+      { title: "Your Feed — YAAWP" },
       { name: "description", content: "Your YAAWP feed, chats and communities." },
-      { property: "og:title", content: "YAAWP" },
+      { property: "og:title", content: "Your Feed — YAAWP" },
       { property: "og:description", content: "Your YAAWP feed, chats and communities." },
     ],
   }),
