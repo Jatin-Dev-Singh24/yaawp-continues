@@ -635,8 +635,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setSupabaseSession(session);
       if (session?.user) {
         handleUserSessionSync(session.user);
-      } else {
+      } else if (_event === 'SIGNED_OUT') {
         setIsAuthenticated(false);
+        try {
+          localStorage.removeItem(`${LOCAL_STORAGE_KEY}_authenticated`);
+        } catch (_) {}
       }
     });
 
@@ -1333,9 +1336,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [activeLegalDoc, setActiveLegalDoc] = useState<LegalDocType>('terms');
   const [isCreateAccountModalOpen, setIsCreateAccountModalOpen] = useState<boolean>(false);
 
-  // Signed-in state comes ONLY from a real Supabase session (see session
-  // listener). Never trust a browser flag for this.
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const storedUser = localStorage.getItem(`${LOCAL_STORAGE_KEY}_user`);
+        const isAuthFlag = localStorage.getItem(`${LOCAL_STORAGE_KEY}_authenticated`);
+        if (isAuthFlag === 'true' && storedUser) return true;
+        if (storedUser && isAuthFlag !== 'false') return true;
+      } catch (_) {}
+    }
+    return false;
+  });
   const [authModalMode, setAuthModalMode] = useState<'signup' | 'login'>('signup');
   const [isUsernameSetupRequired, setIsUsernameSetupRequired] = useState<boolean>(() => {
     return localStorage.getItem('yaawp_needs_username_prompt') === 'true';
@@ -5317,6 +5328,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setSupabaseSession(null);
     setIsProfileMenuOpen(false);
     setIsAuthenticated(false);
+    try {
+      localStorage.removeItem(`${LOCAL_STORAGE_KEY}_authenticated`);
+    } catch (_) {}
     setIsUsernameSetupRequired(false);
     localStorage.removeItem('yaawp_needs_username_prompt');
     showToast('Signed out of session');

@@ -1,6 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AppProvider } from "@/yaawp/context/AppContext";
-import { TemporaryGamesProvider } from "@/yaawp/context/TemporaryGamesContext";
 import { AppLayout } from "@/yaawp/pages";
 
 export const Route = createFileRoute("/_y/app")({
@@ -13,11 +11,5 @@ export const Route = createFileRoute("/_y/app")({
       { property: "og:description", content: "Your YAAWP feed, chats and communities." },
     ],
   }),
-  component: () => (
-    <AppProvider>
-      <TemporaryGamesProvider>
-        <AppLayout />
-      </TemporaryGamesProvider>
-    </AppProvider>
-  ),
+  component: AppLayout,
 });

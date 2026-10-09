@@ -1,4 +1,6 @@
 import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { AppProvider } from "@/yaawp/context/AppContext";
+import { TemporaryGamesProvider } from "@/yaawp/context/TemporaryGamesContext";
 import yaawpCss from "../yaawp/index.css?url";
 
 function YaawpLoadingScreen() {
@@ -27,5 +29,11 @@ export const Route = createFileRoute("/_y")({
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=MonteCarlo&display=swap" },
     ],
   }),
-  component: () => <Outlet />,
+  component: () => (
+    <AppProvider>
+      <TemporaryGamesProvider>
+        <Outlet />
+      </TemporaryGamesProvider>
+    </AppProvider>
+  ),
 });

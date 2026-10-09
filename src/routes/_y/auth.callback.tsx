@@ -146,7 +146,7 @@ function AuthCallback() {
   );
 }
 
-export const Route = createFileRoute("/auth/callback")({
+export const Route = createFileRoute("/_y/auth/callback")({
   ssr: false,
   head: () => ({
     meta: [
